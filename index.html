@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIDS ROYAL - Royal Care for Mothers & Babies</title>
+    <meta name="description"
+        content="KIDS ROYAL - Trusted mother & baby essentials. Order via WhatsApp for fast delivery. Baby care, mother care, feeding essentials, and more.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Font Awesome for Icons (using CDN for simplicity in this generated file) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"><img src="logo.jpg" alt="KIDS ROYAL"></a>
+            <ul class="nav-links">
+                <li><a href="#how-it-works">How to Order</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="blog.html">Tips & Advice</a></li>
+                <li><a href="#why-choose">Why Us</a></li>
+            </ul>
+            <a href="https://wa.me/233242943446" class="btn btn-primary nav-btn" target="_blank">
+                <i class="fa-brands fa-whatsapp"></i> Chat Now
+            </a>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay"></div>
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <span class="logo"><img src="logo.jpg" alt="KIDS ROYAL"></span>
+            <button class="close-menu"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#how-it-works">How to Order</a></li>
+            <li><a href="#categories">Browse Categories</a></li>
+            <li><a href="#why-choose">Why Choose Us</a></li>
+        </ul>
+    </div>
+
+    <!-- Cart Sidebar (Shared) -->
+    <div class="mobile-menu-overlay cart-overlay-bg"></div>
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <h3><i class="fa-solid fa-shopping-bag"></i> Your Cart</h3>
+            <button class="close-cart"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <div class="cart-items">
+            <!-- Items injected by JS -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-amount">GHS 0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="cart.checkout()">
+                <i class="fa-brands fa-whatsapp"></i> Checkout on WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Cart Button -->
+    <div class="cart-float-btn cart-trigger">
+        <i class="fa-solid fa-shopping-basket"></i>
+        <span class="cart-count" style="display: none;">0</span>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-backgrounds">
+            <div class="hero-slide active" style="background-image: url('hero-bg.png');"></div>
+            <div class="hero-slide" style="background-image: url('hero-bg-2.png');"></div>
+            <div class="hero-slide" style="background-image: url('hero-bg-3.png');"></div>
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <span class="badge fade-in-up"><i class="fa-solid fa-crown"></i> The #1 Premium Baby Store in
+                    Accra</span>
+                <h1 class="fade-in-up delay-1">Give Your Baby the <br><span class="highlight">Royal Start</span> in Life
+                </h1>
+                <p class="lead-text fade-in-up delay-2">
+                    Welcome to a world of comfort, safety, and love. We provide trusted essentials for modern mothers
+                    and their little royals.
+                    From premium feeding kits to gentle skincare, we ensure every moment with your baby is special.
+                </p>
+
+                <ul class="hero-features fade-in-up delay-2">
+                    <li><i class="fa-solid fa-check-circle"></i> 100% Authentic Brands</li>
+                    <li><i class="fa-solid fa-truck-fast"></i> Fast Delivery in Accra</li>
+                    <li><i class="fa-solid fa-user-nurse"></i> Expert Mom Support</li>
+                </ul>
+
+                <div class="cta-group fade-in-up delay-3">
+                    <a href="https://wa.me/233242943446" class="btn btn-primary btn-lg pulse-animation">
+                        <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+                    </a>
+                    <a href="#categories" class="btn btn-secondary btn-lg">View Products</a>
+                </div>
+                <div class="trust-indicators fade-in-up delay-4">
+                    <span><i class="fa-solid fa-star text-gold"></i> <strong>4.9/5</strong> Customer Rating</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>How Ordering Works</h2>
+                <p>Simple, friendly, and fast.</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    <h3>1. Browse</h3>
+                    <p>Explore our catalog of premium baby and mother care products.</p>
+                </div>
+                <div class="step-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                    <h3>2. Chat</h3>
+                    <p>Click "Chat on WhatsApp" to connect with our friendly team.</p>
+                </div>
+                <div class="step-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fa-solid fa-gift"></i></div>
+                    <h3>3. Order</h3>
+                    <p>Confirm your order and get it delivered to your doorstep.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section id="categories" class="section bg-cream">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Our Collections</h2>
+                <p>Everything you need for your little royal.</p>
+            </div>
+            <div class="categories-grid">
+                <!-- Data will optionally be populated by JS, but hardcoding for SEO structure here is good too -->
+                <a href="catalog.html?category=baby-care" class="category-card">
+                    <div class="cat-image-wrapper">
+                        <img src="baby-care.png" alt="Baby Care Products">
+                    </div>
+                    <div class="cat-content">
+                        <h3>Baby Care</h3>
+                        <p>Lotions, Oils & Shampoos</p>
+                        <span class="link-arrow">Browse <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="catalog.html?category=mother-care" class="category-card">
+                    <div class="cat-image-wrapper">
+                        <img src="mother-care.png" alt="Mother Care">
+                    </div>
+                    <div class="cat-content">
+                        <h3>Mother Care</h3>
+                        <p>Postpartum essences & comfort</p>
+                        <span class="link-arrow">Browse <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="catalog.html?category=feeding" class="category-card">
+                    <div class="cat-image-wrapper">
+                        <img src="feeding-essentials.png" alt="Feeding Essentials">
+                    </div>
+                    <div class="cat-content">
+                        <h3>Feeding Essentials</h3>
+                        <p>Bottles, Bibs & warmers</p>
+                        <span class="link-arrow">Browse <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="catalog.html?category=skincare" class="category-card">
+                    <div class="cat-image-wrapper">
+                        <img src="baby-skincare.png" alt="Baby Skincare">
+                    </div>
+                    <div class="cat-content">
+                        <h3>Baby Skincare</h3>
+                        <p>Gentle on sensitive skin</p>
+                        <span class="link-arrow">Browse <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="catalog.html?category=diapers" class="category-card">
+                    <div class="cat-image-wrapper">
+                        <img src="diapers-hygiene.png" alt="Diapers & Hygiene">
+                    </div>
+                    <div class="cat-content">
+                        <h3>Diapers & Hygiene</h3>
+                        <p>Wipes, Diapers & Creams</p>
+                        <span class="link-arrow">Browse <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="catalog.html?category=gifts" class="category-card">
+                    <div class="cat-image-wrapper">
+                        <img src="gifts-accessories.png" alt="Baby Gifts & Accessories">
+                    </div>
+                    <div class="cat-content">
+                        <h3>Gifts & Accessories</h3>
+                        <p>Perfect presents for new parents</p>
+                        <span class="link-arrow">Browse <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section id="why-choose" class="section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Why Parents Choose Us</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fa-solid fa-heart"></i></div>
+                    <h3>Carefully Selected</h3>
+                    <p>Only the best, safe products for vour baby.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>Safe & Quality Focused</h3>
+                    <p>Tested and trusted by experts and moms.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fa-solid fa-tag"></i></div>
+                    <h3>Affordable Royal Care</h3>
+                    <p>Premium quality at prices that make sense.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                    <h3>Fast Response</h3>
+                    <p>Instant support via WhatsApp whenever you need us.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Preview Section -->
+    <section class="section bg-light">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Parenting Wisdom</h2>
+                <p>Expert tips for your journey.</p>
+            </div>
+            <div class="grid-2"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <a href="blog.html#baby-care" class="article-preview-card"
+                    style="background: white; padding: 25px; border-radius: 16px; display: flex; align-items: center; gap: 20px; text-decoration: none; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
+                    <div
+                        style="font-size: 2rem; color: var(--primary-color); min-width: 60px; height: 60px; background: #F0F6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-baby"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 5px; color: var(--text-dark);">Essential Baby Care
+                        </h3>
+                        <p style="font-size: 0.9rem; color: var(--text-light);">Golden rules for sleep, bathing, and
+                            bonding.</p>
+                    </div>
+                </a>
+                <a href="blog.html#pregnancy" class="article-preview-card"
+                    style="background: white; padding: 25px; border-radius: 16px; display: flex; align-items: center; gap: 20px; text-decoration: none; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
+                    <div
+                        style="font-size: 2rem; color: var(--primary-color); min-width: 60px; height: 60px; background: #F0F6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-person-pregnant"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 5px; color: var(--text-dark);">Healthy Pregnancy
+                        </h3>
+                        <p style="font-size: 0.9rem; color: var(--text-light);">Hydration, nutrition, and rest tips.</p>
+                    </div>
+                </a>
+                <a href="blog.html#checklist" class="article-preview-card"
+                    style="background: white; padding: 25px; border-radius: 16px; display: flex; align-items: center; gap: 20px; text-decoration: none; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
+                    <div
+                        style="font-size: 2rem; color: var(--primary-color); min-width: 60px; height: 60px; background: #F0F6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 5px; color: var(--text-dark);">Newborn Checklist
+                        </h3>
+                        <p style="font-size: 0.9rem; color: var(--text-light);">The absolute must-haves for 0-3 months.
+                        </p>
+                    </div>
+                </a>
+                <a href="blog.html#wellness" class="article-preview-card"
+                    style="background: white; padding: 25px; border-radius: 16px; display: flex; align-items: center; gap: 20px; text-decoration: none; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
+                    <div
+                        style="font-size: 2rem; color: var(--primary-color); min-width: 60px; height: 60px; background: #F0F6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 5px; color: var(--text-dark);">Mother Wellness</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-light);">Self-care and recovery advice.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="text-center" style="margin-top: 40px;">
+                <a href="blog.html" class="btn btn-secondary">Read All Tips</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="section bg-cream">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>What Moms Say</h2>
+                <span class="badge" style="margin-top: 10px;">Trusted by 1,000+ Parents</span>
+            </div>
+            <div class="grid-3">
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="quote">"Kids Royal saved me so much time! The WhatsApp ordering is super easy and the
+                        delivery was fast. Highly recommend!"</p>
+                    <div class="author">- Ama S.</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="quote">"I love the quality of the baby lotions. It's hard to find genuine products, but I
+                        trust Kids Royal completely."</p>
+                    <div class="author">- Jessica M.</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="quote">"The customer service is amazing. They helped me choose the right gift for my
+                        sister's baby shower."</p>
+                    <div class="author">- Sarah K.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container cta-content text-center">
+            <h2>Give Your Baby the Royal Care They Deserve</h2>
+            <p>Ready to find the perfect essentials? Chat with us now.</p>
+            <a href="https://wa.me/233242943446" class="btn btn-primary btn-xl glow-effect">
+                <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>KIDS ROYAL</h3>
+                <p>Bringing royal care and comfort to mothers and babies everywhere. We are dedicated to providing only
+                    the safest, highest quality essentials to ensure your little one grows up happy, healthy, and loved.
+                    Trusted by parents, approved by experts.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#categories">Browse Products</a></li>
+                    <li><a href="#how-it-works">How to Order</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p><i class="fa-solid fa-phone"></i> +233 24 294 3446</p>
+                <p><i class="fa-solid fa-envelope"></i> hello@kidsroyal.com</p>
+                <p><i class="fa-solid fa-location-dot"></i> Accra, Ghana</p>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p>&copy; 2025 KIDS ROYAL. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Sticky WhatsApp Button -->
+    <a href="https://wa.me/233242943446" class="sticky-whatsapp" target="_blank" aria-label="Chat on WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - KIDS ROYAL</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Catalog specific inline overrides if needed */
+        .page-header {
+            background-color: var(--secondary-color);
+            padding: 120px 0 40px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .breadcrumb {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: var(--text-dark);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-color);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            padding-bottom: 80px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .prod-image {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .prod-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .prod-image img {
+            transform: scale(1.05);
+        }
+
+        .prod-details {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .prod-category {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-light);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .prod-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .prod-benefit {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .prod-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-top: auto;
+            margin-bottom: 15px;
+        }
+
+        .order-btn {
+            width: 100%;
+            background-color: var(--whatsapp-green);
+            color: white;
+            padding: 12px;
+            border-radius: 50px;
+            text-align: center;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .order-btn:hover {
+            background-color: var(--whatsapp-dark);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        /* Category Filters Pill */
+        .category-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .cat-pill {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .cat-pill:hover,
+        .cat-pill.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"><img src="logo.jpg" alt="KIDS ROYAL"></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#categories">Categories</a></li>
+            </ul>
+            <a href="https://wa.me/233242943446" class="btn btn-primary nav-btn" target="_blank">
+                <i class="fa-brands fa-whatsapp"></i> Chat Now
+            </a>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay"></div>
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <span class="logo"><img src="logo.jpg" alt="KIDS ROYAL"></span>
+            <button class="close-menu"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#categories">Browse Categories</a></li>
+            <li><a href="index.html#why-choose">Why Choose Us</a></li>
+        </ul>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="mobile-menu-overlay cart-overlay-bg"></div>
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <h3><i class="fa-solid fa-shopping-bag"></i> Your Cart</h3>
+            <button class="close-cart"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <div class="cart-items">
+            <!-- Items injected by JS -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-amount">GHS 0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="cart.checkout()">
+                <i class="fa-brands fa-whatsapp"></i> Checkout on WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Cart Button -->
+    <div class="cart-float-btn cart-trigger">
+        <i class="fa-solid fa-shopping-basket"></i>
+        <span class="cart-count" style="display: none;">0</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> / <span id="current-cat-name">Products</span>
+            </div>
+            <h1 id="page-title">Our Collection</h1>
+
+            <!-- Category Pills for quick switching -->
+            <div class="category-filters" id="category-filters">
+                <a href="catalog.html?category=all" class="cat-pill" id="filter-all">All</a>
+                <a href="catalog.html?category=baby-care" class="cat-pill" id="filter-baby-care">Baby Care</a>
+                <a href="catalog.html?category=mother-care" class="cat-pill" id="filter-mother-care">Mother Care</a>
+                <a href="catalog.html?category=feeding" class="cat-pill" id="filter-feeding">Feeding</a>
+                <a href="catalog.html?category=skincare" class="cat-pill" id="filter-skincare">Skincare</a>
+                <a href="catalog.html?category=diapers" class="cat-pill" id="filter-diapers">Diapers</a>
+                <a href="catalog.html?category=gifts" class="cat-pill" id="filter-gifts">Gifts</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <section class="container">
+        <div class="product-grid" id="product-grid">
+            <!-- Products will be injected here -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>KIDS ROYAL</h3>
+                <p>Bringing royal care and comfort to mothers and babies everywhere.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html#categories">Browse Products</a></li>
+                    <li><a href="index.html#how-it-works">How to Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p><i class="fa-solid fa-phone"></i> +233 24 294 3446</p>
+                <p><i class="fa-solid fa-envelope"></i> hello@kidsroyal.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p>&copy; 2025 KIDS ROYAL. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Sticky WhatsApp -->
+    <a href="https://wa.me/233242943446" class="sticky-whatsapp" target="_blank">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Catalog Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const category = params.get('category') || 'all';
+
+            const grid = document.getElementById('product-grid');
+            const pageTitle = document.getElementById('page-title');
+            const crumbName = document.getElementById('current-cat-name');
+
+            // Highlight active filter
+            const validCategories = ['all', 'baby-care', 'mother-care', 'feeding', 'skincare', 'diapers', 'gifts'];
+            const safeCategory = validCategories.includes(category) ? category : 'all';
+            document.getElementById(`filter-${safeCategory}`).classList.add('active');
+
+            // Format category name for display
+            const formatName = (cat) => {
+                if (cat === 'all') return 'All Products';
+                return cat.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            };
+
+            pageTitle.textContent = formatName(safeCategory);
+            crumbName.textContent = formatName(safeCategory);
+
+            // Fetch and render
+            const items = getProductsByCategory(safeCategory === 'all' ? 'all' : safeCategory);
+
+            if (items.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-regular fa-folder-open"></i>
+                        <h3>No products found in this category yet.</h3>
+                        <p>Check back soon or browse other categories.</p>
+                    </div>
+                `;
+            } else {
+                grid.innerHTML = items.map(product => {
+                    // Escape single quotes for the inline onclick handler
+                    const safeProduct = JSON.stringify(product).replace(/'/g, "&#39;");
+
+                    return `
+                        <div class="product-card fade-in-up">
+                            <div class="prod-image">
+                                <a href="product.html?id=${product.id}">
+                                    <img src="${product.image}" alt="${product.name}">
+                                </a>
+                            </div>
+                            <div class="prod-details">
+                                <span class="prod-category">${formatName(product.category)}</span>
+                                <h3 class="prod-title">
+                                    <a href="product.html?id=${product.id}">${product.name}</a>
+                                </h3>
+                                <p class="prod-benefit">${product.benefit}</p>
+                                <span class="prod-price">${product.price}</span>
+                                <button class="order-btn" onclick='cart.add(${safeProduct})'>
+                                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Re-trigger observer for new elements
+                const newElements = document.querySelectorAll('.product-card');
+                if (typeof observer !== 'undefined') {
+                    newElements.forEach(el => observer.observe(el));
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

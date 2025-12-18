@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - KIDS ROYAL</title>
+    <meta name="description" content="KIDS ROYAL - Trusted mother & baby comfort.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"><img src="logo.jpg" alt="KIDS ROYAL"></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="catalog.html?category=all">Shop All</a></li>
+            </ul>
+            <!-- Cart Trigger -->
+            <div class="nav-cart-trigger cart-trigger" style="cursor: pointer; position: relative;">
+                <i class="fa-solid fa-shopping-basket" style="font-size: 1.2rem; color: var(--text-dark);"></i>
+                <span class="cart-count"
+                    style="width: 18px; height: 18px; font-size: 10px; top: -8px; right: -8px; display: none;">0</span>
+            </div>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay"></div>
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <span class="logo"><img src="logo.jpg" alt="KIDS ROYAL"></span>
+            <button class="close-menu"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="catalog.html">Shop Catalog</a></li>
+        </ul>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="mobile-menu-overlay cart-overlay-bg"></div>
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <h3><i class="fa-solid fa-shopping-bag"></i> Your Cart</h3>
+            <button class="close-cart"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <div class="cart-items"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-amount">GHS 0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="cart.checkout()">
+                <i class="fa-brands fa-whatsapp"></i> Checkout on WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Cart Button -->
+    <div class="cart-float-btn cart-trigger">
+        <i class="fa-solid fa-shopping-basket"></i>
+        <span class="cart-count" style="display: none;">0</span>
+    </div>
+
+    <!-- Product Details Section -->
+    <section class="section product-details-section">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb" style="margin-bottom: 30px;">
+                <a href="index.html">Home</a> / <a href="catalog.html">Shop</a> / <span id="cur-prod-name"
+                    style="color: var(--primary-color);">Product</span>
+            </div>
+
+            <div class="product-wrapper">
+                <div class="product-image-col">
+                    <img id="p-image" src="" alt="Product Image" class="fade-in-up">
+                </div>
+                <div class="product-info-col fade-in-up delay-1">
+                    <span id="p-category" class="badge">Category</span>
+                    <h1 id="p-title">Product Name</h1>
+                    <p id="p-benefit" class="benefit-highlight">Benefit text here</p>
+                    <h2 id="p-price" class="price-tag">GHS 0.00</h2>
+
+                    <div class="divider"></div>
+
+                    <p id="p-desc" class="description-text">Full product description goes here.</p>
+
+                    <div class="action-buttons">
+                        <button id="add-to-cart-btn" class="btn btn-primary btn-lg" style="width: 100%;">
+                            <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                        </button>
+                        <a id="whatsapp-order-btn" href="#" target="_blank" class="btn btn-secondary btn-lg"
+                            style="width: 100%; text-align: center;">
+                            <i class="fa-brands fa-whatsapp"></i> Buy Now
+                        </a>
+                    </div>
+
+                    <div class="delivery-note">
+                        <i class="fa-solid fa-truck-fast"></i> Delivery within 24-48 hours inside Accra.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="section bg-cream">
+        <div class="container">
+            <h3 class="text-center" style="margin-bottom: 40px;">You May Also Like</h3>
+            <div class="product-grid" id="related-grid">
+                <!-- Related Items -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>KIDS ROYAL</h3>
+                <p>Bringing royal care and comfort to mothers and babies everywhere.</p>
+            </div>
+            <div class="footer-col" style="text-align: right;">
+                <p>&copy; 2025 KIDS ROYAL</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Use inline script for page-specific logic to keep script.js clean
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('id');
+            const product = products.find(p => p.id === productId);
+
+            if (!product) {
+                document.querySelector('.product-details-section .container').innerHTML = `
+                    <div class="text-center" style="padding: 100px 0;">
+                        <h2>Product not found</h2>
+                        <a href="catalog.html" class="btn btn-primary">Return to Shop</a>
+                    </div>`;
+                return;
+            }
+
+            // Populate Data
+            document.title = `${product.name} - KIDS ROYAL`;
+            document.querySelector('meta[name="description"]').setAttribute("content", product.description);
+
+            document.getElementById('cur-prod-name').textContent = product.name;
+            document.getElementById('p-image').src = product.image;
+            document.getElementById('p-image').alt = product.name;
+            document.getElementById('p-category').textContent = product.category.replace('-', ' ').toUpperCase();
+            document.getElementById('p-title').textContent = product.name;
+            document.getElementById('p-benefit').textContent = product.benefit;
+            document.getElementById('p-price').textContent = product.price;
+            document.getElementById('p-desc').textContent = product.description;
+
+            // Buttons
+            const waMsg = `Hello KIDS ROYAL, I am interested in buying: ${product.name} (${product.price})`;
+            document.getElementById('whatsapp-order-btn').href = `https://wa.me/233242943446?text=${encodeURIComponent(waMsg)}`;
+
+            // Add to Cart Logic
+            document.getElementById('add-to-cart-btn').onclick = () => {
+                cart.add(product);
+                // cart.openCart(); // is handled inside cart.add() if we updated it, or we can force it here
+            };
+
+            // Related Products (Same category, exclude current)
+            const related = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
+            const relatedGrid = document.getElementById('related-grid');
+
+            if (related.length > 0) {
+                relatedGrid.innerHTML = related.map(p => {
+                    // Escape quotes
+                    const safeP = JSON.stringify(p).replace(/'/g, "&#39;");
+                    return `
+                        <div class="product-card">
+                            <div class="prod-image">
+                                <a href="product.html?id=${p.id}"><img src="${p.image}" alt="${p.name}"></a>
+                            </div>
+                            <div class="prod-details">
+                                <h3 class="prod-title"><a href="product.html?id=${p.id}">${p.name}</a></h3>
+                                <span class="prod-price">${p.price}</span>
+                                <button class="order-btn" onclick='cart.add(${safeP})'>
+                                    <i class="fa-solid fa-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                document.querySelector('.section.bg-cream').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

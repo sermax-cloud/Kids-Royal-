@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parenting Tips & Advice - KIDS ROYAL</title>
+    <meta name="description"
+        content="Expert parenting tips, pregnancy advice, and newborn essentials checklists from Kids Royal. Your trusted partner in parenthood.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .blog-hero {
+            padding: 140px 0 80px;
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(240, 246, 255, 0.9)), url('blog-header.png');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+        }
+
+        .blog-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+        }
+
+        .blog-hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--text-light);
+        }
+
+        .blog-grid {
+            margin-top: -50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .article-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition);
+            border: 1px solid #f0f0f0;
+            height: 100%;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .article-body {
+            padding: 30px;
+        }
+
+        .article-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #F0F6FF;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .article-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .article-content {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .article-content ul {
+            list-style: disc;
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+
+        .article-content li {
+            margin-bottom: 8px;
+        }
+
+        .article-footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 0.9rem;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"><img src="logo.jpg" alt="KIDS ROYAL"></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#categories">Shop</a></li>
+                <li><a href="#" class="active">Tips & Advice</a></li>
+            </ul>
+            <a href="https://wa.me/233242943446" class="btn btn-primary nav-btn" target="_blank">
+                <i class="fa-brands fa-whatsapp"></i> Chat Now
+            </a>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay"></div>
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <span class="logo"><img src="logo.jpg" alt="KIDS ROYAL"></span>
+            <button class="close-menu"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#categories">Shop Essentials</a></li>
+            <li><a href="#">Parenting Tips</a></li>
+        </ul>
+    </div>
+
+    <!-- Cart Sidebar (Shared) -->
+    <div class="mobile-menu-overlay cart-overlay-bg"></div>
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <h3><i class="fa-solid fa-shopping-bag"></i> Your Cart</h3>
+            <button class="close-cart"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <div class="cart-items">
+            <!-- Items injected by JS -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-amount">GHS 0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="cart.checkout()">
+                <i class="fa-brands fa-whatsapp"></i> Checkout on WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Cart Button -->
+    <div class="cart-float-btn cart-trigger">
+        <i class="fa-solid fa-shopping-basket"></i>
+        <span class="cart-count" style="display: none;">0</span>
+    </div>
+
+    <!-- Blog Header -->
+    <header class="blog-hero">
+        <div class="container">
+            <span class="badge">Royal Parenting Hub</span>
+            <h1>Expert Advice & Tips</h1>
+            <p>A curated collection of wisdom for everyday royal parenting moments.</p>
+        </div>
+    </header>
+
+    <!-- Articles Section -->
+    <section class="section bg-light">
+        <div class="container">
+            <div class="grid-2"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px;">
+
+                <!-- Article 1: Baby Care Tips -->
+                <article class="article-card" id="baby-care">
+                    <div class="article-body">
+                        <div class="article-icon"><i class="fa-solid fa-baby"></i></div>
+                        <h2>Essential Baby Care Tips</h2>
+                        <div class="article-content">
+                            <p>Caring for your little one can be overwhelming at first. Here are some golden rules to
+                                keep them happy and healthy:</p>
+                            <ul>
+                                <li><strong>Sleep Safety:</strong> Always place your baby on their back to sleep to
+                                    reduce SIDS risk. Keep the crib free of pillows and toys.</li>
+                                <li><strong>Bathing:</strong> You don't need to bathe your newborn every day; 2-3 times
+                                    a week is enough to protect their delicate skin barrier.</li>
+                                <li><strong>Bonding:</strong> Skin-to-skin contact isn't just for the hospital. It
+                                    regulates baby's heart rate and builds a secure attachment.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </article>
+
+                <!-- Article 2: Pregnancy Tips -->
+                <article class="article-card" id="pregnancy">
+                    <div class="article-body">
+                        <div class="article-icon"><i class="fa-solid fa-person-pregnant"></i></div>
+                        <h2>A Healthy Pregnancy Guide</h2>
+                        <div class="article-content">
+                            <p>Growing a life is hard work! Prioritize these pillars for a smoother journey:</p>
+                            <ul>
+                                <li><strong>Hydration:</strong> Drink at least 8-10 glasses of water daily. It helps
+                                    form amniotic fluid and reduces swelling.</li>
+                                <li><strong>Nutrition:</strong> Focus on iron-rich foods (spinach, lean meat) and
+                                    calcium for baby's developing bones.</li>
+                                <li><strong>Rest:</strong> Listen to your body. If you're tired, sleep. Your body is
+                                    running a marathon every single day.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </article>
+
+                <!-- Article 3: Newborn Essentials -->
+                <article class="article-card" id="checklist">
+                    <div class="article-body">
+                        <div class="article-icon"><i class="fa-solid fa-list-check"></i></div>
+                        <h2>The Ultimate Newborn Checklist</h2>
+                        <div class="article-content">
+                            <p>Don't buy everything! Here are the absolute must-haves for the first 3 months:</p>
+                            <ul>
+                                <li><strong>Clothing:</strong> 6-10 onesies (zippers are better than buttons for night
+                                    changes!), 4-6 sleepers, and socks.</li>
+                                <li><strong>Diapering:</strong> A generous supply of newborn diapers, gentle wipes, and
+                                    a good barrier cream.</li>
+                                <li><strong>Must-Haves:</strong> A reliable digital thermometer, nasal aspirator, and
+                                    burp cloths—lots of them!</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </article>
+
+                <!-- Article 4: Mother Wellness -->
+                <article class="article-card" id="wellness">
+                    <div class="article-body">
+                        <div class="article-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                        <h2>Mother Wellness & Recovery</h2>
+                        <div class="article-content">
+                            <p>You cannot pour from an empty cup. Taking care of yourself is part of taking care of your
+                                baby.</p>
+                            <ul>
+                                <li><strong>Ask for Help:</strong> Accept meals, cleaning help, or babysitting. It takes
+                                    a village.</li>
+                                <li><strong>Postpartum Checkups:</strong> Don't skip your 6-week checkup. Discuss any
+                                    mood changes openly with your doctor.</li>
+                                <li><strong>Grace:</strong> Your body changed for 9 months to grow a human; give it time
+                                    to recover. You are doing a great job.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>KIDS ROYAL</h3>
+                <p>Bringing royal care and comfort to mothers and babies everywhere. We are dedicated to providing only
+                    the safest, highest quality essentials to ensure your little one grows up happy, healthy, and loved.
+                    Trusted by parents, approved by experts.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html#categories">Browse Products</a></li>
+                    <li><a href="index.html#how-it-works">How to Order</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p><i class="fa-solid fa-phone"></i> +233 24 294 3446</p>
+                <p><i class="fa-solid fa-envelope"></i> hello@kidsroyal.com</p>
+                <p><i class="fa-solid fa-location-dot"></i> Accra, Ghana</p>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p>&copy; 2025 KIDS ROYAL. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Sticky WhatsApp Button -->
+    <a href="https://wa.me/233242943446" class="sticky-whatsapp" target="_blank" aria-label="Chat on WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

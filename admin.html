@@ -58,22 +58,14 @@
     <main class="main-content">
 
         <!-- DASHBOARD / PRODUCTS VIEW -->
+        <!-- DASHBOARD VIEW -->
         <div id="view-dashboard" class="admin-view">
             <header class="header">
-                <h2>Product Management</h2>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-primary" onclick="try{admin.seedDatabase()}catch(e){alert('Error: '+e.message)}"
-                        style="background-color: var(--whatsapp-green);">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Defaults
-                    </button>
-                    <button class="btn-primary" onclick="admin.openModal()">
-                        <i class="fa-solid fa-plus"></i> Add Product
-                    </button>
-                </div>
+                <h2>Dashboard Overview</h2>
             </header>
 
             <!-- Stats -->
-            <div class="stats-grid">
+            <div class="stats-grid" style="margin-bottom: 30px;">
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
                     <div class="stat-info">
@@ -89,6 +81,34 @@
                         <p>Active</p>
                     </div>
                 </div>
+            </div>
+
+            <!-- Quick Links / Collections Collections -->
+            <h3>Quick Access</h3>
+            <div id="dashboard-collections-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- PRODUCTS VIEW -->
+        <div id="view-products" class="admin-view" style="display: none;">
+            <header class="header">
+                <h2>Product Management</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-primary" onclick="try{admin.seedDatabase()}catch(e){alert('Error: '+e.message)}"
+                        style="background-color: var(--whatsapp-green);">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Defaults
+                    </button>
+                    <button class="btn-primary" onclick="admin.openModal()">
+                        <i class="fa-solid fa-plus"></i> Add Product
+                    </button>
+                </div>
+            </header>
+
+            <div style="margin-bottom: 20px;">
+                <input type="search" placeholder="Search products..." onkeyup="admin.filterTable(this.value)"
+                    style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
             </div>
 
             <!-- Product Table -->

@@ -199,8 +199,10 @@ const admin = {
         document.querySelectorAll('.admin-view').forEach(el => el.style.display = 'none');
 
         // Show selected view
-        if (viewName === 'dashboard' || viewName === 'products') {
+        if (viewName === 'dashboard') {
             document.getElementById('view-dashboard').style.display = 'block';
+        } else if (viewName === 'products') {
+            document.getElementById('view-products').style.display = 'block';
         } else if (viewName === 'collections') {
             document.getElementById('view-collections').style.display = 'block';
         } else if (viewName === 'orders') {
@@ -212,8 +214,11 @@ const admin = {
 
     // --- COLLECTIONS LOGIC ---
     renderCollections() {
-        const grid = document.getElementById('collections-grid');
-        if (!grid) return;
+        // Render in BOTH the main collections view AND the dashboard overview
+        const grids = [
+            document.getElementById('collections-grid'),
+            document.getElementById('dashboard-collections-grid')
+        ];
 
         // Fixed List of Collections
         const collections = [
@@ -225,7 +230,7 @@ const admin = {
             { id: 'gifts', name: 'Gifts', icon: 'fa-gift' }
         ];
 
-        grid.innerHTML = collections.map(col => {
+        const html = collections.map(col => {
             const count = this.products.filter(p => p.category === col.id).length;
             return `
                 <div style="background:white; padding: 20px; border-radius:12px; text-align:center; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.05); transition: transform 0.2s;"
@@ -238,6 +243,10 @@ const admin = {
                 </div>
             `;
         }).join('');
+
+        grids.forEach(grid => {
+            if (grid) grid.innerHTML = html;
+        });
     },
 
     // Quick filter helper (optional, if search input exists)

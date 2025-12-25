@@ -41,18 +41,7 @@ const admin = {
         if (this.loadConfig) this.loadConfig();
 
         if (window.supabaseClient) {
-            const header = document.querySelector('.header');
-            // If DB is empty, highlight the Upload button
-            if (this.products.length === 0) {
-                const alert = document.createElement('div');
-                alert.style.padding = '10px';
-                alert.style.marginBottom = '20px';
-                alert.style.background = '#d1e7dd';
-                alert.style.color = '#0f5132';
-                alert.style.borderRadius = '8px';
-                alert.innerHTML = '<i class="fa-solid fa-info-circle"></i> <strong>Database Connected!</strong> It looks empty. Click "Upload Defaults" to push your starter products to the cloud.';
-                if (header) header.parentNode.insertBefore(alert, header.nextSibling);
-            }
+            // Database Connected silently.
         } else {
             const header = document.querySelector('.header');
             if (header) {

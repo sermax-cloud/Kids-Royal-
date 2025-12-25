@@ -25,10 +25,14 @@
             <i class="fa-solid fa-crown"></i> KIDS ROYAL
         </div>
         <ul class="menu">
-            <li><a href="#" class="active"><i class="fa-solid fa-gauge-high"></i> Dashboard</a></li>
-            <li><a href="#"><i class="fa-solid fa-box-open"></i> Products</a></li>
-            <li><a href="#"><i class="fa-solid fa-bag-shopping"></i> Orders</a></li>
-            <li><a href="#"><i class="fa-solid fa-images"></i> Gallery</a></li>
+            <li><a href="#" class="nav-item active" onclick="admin.switchView('dashboard')"><i
+                        class="fa-solid fa-gauge-high"></i> Dashboard</a></li>
+            <li><a href="#" class="nav-item" onclick="admin.switchView('products')"><i class="fa-solid fa-box-open"></i>
+                    Products</a></li>
+            <li><a href="#" class="nav-item" onclick="admin.switchView('orders')"><i
+                        class="fa-solid fa-bag-shopping"></i> Orders</a></li>
+            <li><a href="#" class="nav-item" onclick="admin.switchView('gallery')"><i class="fa-solid fa-images"></i>
+                    Gallery</a></li>
         </ul>
         <div class="logout-btn">
             <i class="fa-solid fa-right-from-bracket"></i> Logout
@@ -37,53 +41,106 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <header class="header">
-            <h2>Product Management</h2>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-primary" onclick="admin.seedDatabase()"
-                    style="background-color: var(--whatsapp-green);">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload Defaults
-                </button>
-                <button class="btn-primary" onclick="admin.openModal()">
-                    <i class="fa-solid fa-plus"></i> Add Product
-                </button>
-            </div>
-        </header>
 
-        <!-- Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
-                <div class="stat-info">
-                    <h3 id="total-products">0</h3>
-                    <p>Total Products</p>
+        <!-- DASHBOARD / PRODUCTS VIEW -->
+        <div id="view-dashboard" class="admin-view">
+            <header class="header">
+                <h2>Product Management</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-primary" onclick="admin.seedDatabase()"
+                        style="background-color: var(--whatsapp-green);">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Defaults
+                    </button>
+                    <button class="btn-primary" onclick="admin.openModal()">
+                        <i class="fa-solid fa-plus"></i> Add Product
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
+                    <div class="stat-info">
+                        <h3 id="total-products">0</h3>
+                        <p>Total Products</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: #25D366; background: #eafaef;"><i
+                            class="fa-solid fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <h3 id="active-products">0</h3>
+                        <p>Active</p>
+                    </div>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="color: #25D366; background: #eafaef;"><i
-                        class="fa-solid fa-check-circle"></i></div>
-                <div class="stat-info">
-                    <h3 id="active-products">0</h3>
-                    <p>Active</p>
-                </div>
+
+            <!-- Product Table -->
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="product-table-body">
+                    <!-- Rows injected via JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ORDERS VIEW (Placeholder) -->
+        <div id="view-orders" class="admin-view" style="display: none;">
+            <header class="header">
+                <h2>Orders</h2>
+            </header>
+            <div class="empty-state-admin"
+                style="text-align: center; padding: 50px; background: white; border-radius: 12px;">
+                <i class="fa-brands fa-whatsapp" style="font-size: 3rem; color: #25D366; margin-bottom: 20px;"></i>
+                <h3>Orders are managed via WhatsApp</h3>
+                <p style="color: #666; max-width: 400px; margin: 10px auto;">Since checkout happens on WhatsApp, all
+                    order details and customer communications are stored in your chat history.</p>
+                <a href="https://wa.me/233242943446" target="_blank" class="btn-primary"
+                    style="display: inline-flex; margin-top: 20px; background-color: #25D366;">
+                    Open WhatsApp Web
+                </a>
             </div>
         </div>
 
-        <!-- Product Table -->
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="product-table-body">
-                <!-- Rows injected via JS -->
-            </tbody>
-        </table>
+        <!-- GALLERY VIEW (Placeholder) -->
+        <div id="view-gallery" class="admin-view" style="display: none;">
+            <header class="header">
+                <h2>Media Gallery</h2>
+                <button class="btn-primary">
+                    <i class="fa-solid fa-upload"></i> Upload Image
+                </button>
+            </header>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+                <!-- Mock Gallery Items -->
+                <div
+                    style="aspect-ratio: 1; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa;">
+                    <i class="fa-solid fa-image" style="font-size: 2rem;"></i>
+                </div>
+                <div
+                    style="aspect-ratio: 1; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa;">
+                    <i class="fa-solid fa-image" style="font-size: 2rem;"></i>
+                </div>
+                <div
+                    style="aspect-ratio: 1; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa;">
+                    <i class="fa-solid fa-image" style="font-size: 2rem;"></i>
+                </div>
+                <div
+                    style="aspect-ratio: 1; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa;">
+                    <i class="fa-solid fa-image" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+            <p style="margin-top: 20px; color: #999; font-style: italic;">(Gallery management coming soon)</p>
+        </div>
+
     </main>
 
     <!-- Add/Edit Modal -->

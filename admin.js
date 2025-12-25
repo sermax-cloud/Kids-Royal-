@@ -166,6 +166,28 @@ const admin = {
             btn.disabled = false;
             btn.innerHTML = oldText;
         }
+    },
+
+    switchView(viewName) {
+        // Update Sidebar Active State
+        const links = document.querySelectorAll('.nav-item');
+        links.forEach(l => l.classList.remove('active'));
+
+        // Find the link that was clicked (approximate match)
+        const activeLink = Array.from(links).find(l => l.getAttribute('onclick').includes(viewName));
+        if (activeLink) activeLink.classList.add('active');
+
+        // Hide all views
+        document.querySelectorAll('.admin-view').forEach(el => el.style.display = 'none');
+
+        // Show selected view
+        if (viewName === 'dashboard' || viewName === 'products') {
+            document.getElementById('view-dashboard').style.display = 'block';
+        } else if (viewName === 'orders') {
+            document.getElementById('view-orders').style.display = 'block';
+        } else if (viewName === 'gallery') {
+            document.getElementById('view-gallery').style.display = 'block';
+        }
     }
 };
 

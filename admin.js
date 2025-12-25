@@ -21,7 +21,10 @@ const admin = {
 
         this.renderTable();
         this.updateStats();
-        this.renderGallery(); // Render Gallery
+        this.renderTable();
+        this.updateStats();
+        this.renderGallery();
+        this.renderCollections(); // Init Collections
 
         if (supabase) {
             const header = document.querySelector('.header');
@@ -198,11 +201,103 @@ const admin = {
         // Show selected view
         if (viewName === 'dashboard' || viewName === 'products') {
             document.getElementById('view-dashboard').style.display = 'block';
+        } else if (viewName === 'collections') {
+            document.getElementById('view-collections').style.display = 'block';
         } else if (viewName === 'orders') {
             document.getElementById('view-orders').style.display = 'block';
         } else if (viewName === 'gallery') {
             document.getElementById('view-gallery').style.display = 'block';
         }
+    },
+
+    // --- COLLECTIONS LOGIC ---
+    renderCollections() {
+        const grid = document.getElementById('collections-grid');
+        if (!grid) return;
+
+        // Fixed List of Collections
+        const collections = [
+            { id: 'baby-care', name: 'Baby Care', icon: 'fa-baby-carriage' },
+            { id: 'mother-care', name: 'Mother Care', icon: 'fa-heart' },
+            { id: 'feeding', name: 'Feeding Essentials', icon: 'fa-mug-hot' },
+            { id: 'skincare', name: 'Skincare', icon: 'fa-soap' },
+            { id: 'diapers', name: 'Diapers & Hygiene', icon: 'fa-layer-group' },
+            { id: 'gifts', name: 'Gifts', icon: 'fa-gift' }
+        ];
+
+        grid.innerHTML = collections.map(col => {
+            const count = this.products.filter(p => p.category === col.id).length;
+            return `
+                <div style="background:white; padding: 20px; border-radius:12px; text-align:center; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.05); transition: transform 0.2s;"
+                     onmouseover="this.style.transform='translateY(-5px)'" 
+                     onmouseout="this.style.transform='translateY(0)'"
+                     onclick="admin.switchView('products'); document.querySelector('input[type=search]').value='${col.id}'; admin.filterTable('${col.id}')">
+                    <i class="fa-solid ${col.icon}" style="font-size:2.5rem; color:#FFD700; margin-bottom:15px;"></i>
+                    <h3 style="margin:0; font-size:1.1rem;">${col.name}</h3>
+                    <p style="color:#666; margin-top:5px;">${count} items</p>
+                </div>
+            `;
+        }).join('');
+    },
+
+    // Quick filter helper (optional, if search input exists)
+    filterTable(term) {
+        // Simple client-side filter for demo purposes
+        const rows = document.querySelectorAll('#product-table-body tr');
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(term.toLowerCase()) ? '' : 'none';
+        });
+    },
+
+    // --- UPLOAD HANDLERS ---
+    uploadContext: null, // 'gallery' or 'product'
+
+    triggerUpload(context) {
+        this.uploadContext = context;
+        document.getElementById('global-upload').click();
+    },
+
+    async handleFileSelect(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        // Show loading state (simple alert for now)
+        // In a real app, you'd use a toast or spinner
+        const originalText = document.body.style.cursor;
+        document.body.style.cursor = 'wait';
+
+        try {
+            const url = await db.uploadImage(file);
+
+            if (url) {
+                if (this.uploadContext === 'gallery') {
+                    this.addGalleryImageFromUrl(url);
+                } else if (this.uploadContext === 'product') {
+                    document.getElementById('prodImage').value = url;
+                    alert("Image Uploaded!");
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            document.body.style.cursor = originalText;
+            // Reset input
+            input.value = '';
+            this.uploadContext = null;
+        }
+    },
+
+    addGalleryImageFromUrl(url) {
+        const newImg = {
+            id: 'img_' + Date.now(),
+            url: url,
+            created_at: new Date().toISOString()
+        };
+        const current = JSON.parse(localStorage.getItem('kids_royal_gallery')) || [];
+        current.unshift(newImg);
+        localStorage.setItem('kids_royal_gallery', JSON.stringify(current));
+        this.renderGallery();
     },
 
     // --- GALLERY LOGIC ---
@@ -227,21 +322,7 @@ const admin = {
     },
 
     addGalleryImage() {
-        const url = prompt("Enter Image URL:");
-        if (url) {
-            const newImg = {
-                id: 'img_' + Date.now(),
-                url: url,
-                created_at: new Date().toISOString()
-            };
-
-            // Save to Local Storage (or switch to DB later)
-            const current = JSON.parse(localStorage.getItem('kids_royal_gallery')) || [];
-            current.unshift(newImg);
-            localStorage.setItem('kids_royal_gallery', JSON.stringify(current));
-
-            this.renderGallery();
-        }
+        this.triggerUpload('gallery');
     },
 
     deleteGalleryImage(id) {

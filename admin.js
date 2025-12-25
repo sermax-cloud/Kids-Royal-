@@ -345,8 +345,8 @@ const admin = {
             document.getElementById('dashboard-collections-grid')
         ];
 
-        // Fixed List of Collections
-        const collections = [
+        // Combine Default Fixed + Custom Collections
+        const defaults = [
             { id: 'baby-care', name: 'Baby Care', icon: 'fa-baby-carriage' },
             { id: 'mother-care', name: 'Mother Care', icon: 'fa-heart' },
             { id: 'feeding', name: 'Feeding Essentials', icon: 'fa-mug-hot' },
@@ -355,14 +355,25 @@ const admin = {
             { id: 'gifts', name: 'Gifts', icon: 'fa-gift' }
         ];
 
-        const html = collections.map(col => {
+        // Merge with any custom ones saved in local storage (for now)
+        // In a real app, these would be in a 'categories' table in Supabase
+        const custom = JSON.parse(localStorage.getItem('kids_royal_custom_cats')) || [];
+        const allCols = [...defaults, ...custom];
+
+        // Update product dropdown
+        this.updateCategoryDropdown(allCols);
+
+        const html = allCols.map(col => {
             const count = this.products.filter(p => p.category === col.id).length;
             return `
-                <div style="background:white; padding: 20px; border-radius:12px; text-align:center; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.05); transition: transform 0.2s;"
+                <div style="background:white; padding: 20px; border-radius:12px; text-align:center; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.05); transition: transform 0.2s; position:relative;"
                      onmouseover="this.style.transform='translateY(-5px)'" 
                      onmouseout="this.style.transform='translateY(0)'"
-                     onclick="admin.switchView('products'); document.querySelector('input[type=search]').value='${col.id}'; admin.filterTable('${col.id}')">
-                    <i class="fa-solid ${col.icon}" style="font-size:2.5rem; color:#FFD700; margin-bottom:15px;"></i>
+                     onclick="if(!event.target.classList.contains('del-btn')) { admin.switchView('products'); document.querySelector('input[type=search]').value='${col.id}'; admin.filterTable('${col.id}'); }">
+                    
+                    ${col.isCustom ? `<button class="del-btn" onclick="admin.deleteCollection('${col.id}')" style="position:absolute; top:5px; right:5px; border:none; background:none; color:#f00; cursor:pointer;">&times;</button>` : ''}
+                    
+                    <i class="fa-solid ${col.icon || 'fa-folder'}" style="font-size:2.5rem; color:#FFD700; margin-bottom:15px;"></i>
                     <h3 style="margin:0; font-size:1.1rem;">${col.name}</h3>
                     <p style="color:#666; margin-top:5px;">${count} items</p>
                 </div>
@@ -372,6 +383,36 @@ const admin = {
         grids.forEach(grid => {
             if (grid) grid.innerHTML = html;
         });
+    },
+
+    addCollection() {
+        const name = prompt("Enter Collection Name (e.g. 'Toys'):");
+        if (name) {
+            const id = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            const newCol = { id: id, name: name, icon: 'fa-star', isCustom: true };
+
+            const custom = JSON.parse(localStorage.getItem('kids_royal_custom_cats')) || [];
+            custom.push(newCol);
+            localStorage.setItem('kids_royal_custom_cats', JSON.stringify(custom));
+
+            this.renderCollections();
+            alert("Collection Added! You can now select it when adding products.");
+        }
+    },
+
+    deleteCollection(id) {
+        if (confirm("Delete this collection? Products will remain but lose their category label.")) {
+            let custom = JSON.parse(localStorage.getItem('kids_royal_custom_cats')) || [];
+            custom = custom.filter(c => c.id !== id);
+            localStorage.setItem('kids_royal_custom_cats', JSON.stringify(custom));
+            this.renderCollections();
+        }
+    },
+
+    updateCategoryDropdown(cols) {
+        const select = document.getElementById('prodCategory');
+        if (!select) return;
+        select.innerHTML = cols.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
     },
 
     // Quick filter helper (optional, if search input exists)

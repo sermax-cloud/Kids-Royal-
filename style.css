@@ -134,7 +134,7 @@ img {
 
 /* Navbar */
 .navbar {
-    position: fixed;
+    position: sticky;
     top: 0;
     width: 100%;
     background: rgba(255, 255, 255, 0.95);
@@ -204,7 +204,8 @@ img {
 
 /* Hero Section */
 .hero {
-    padding-top: 160px;
+    /* Navbar is sticky now, so we don't need huge padding */
+    padding-top: 50px;
     /* Account for fixed nav */
     padding-bottom: 100px;
     /* Static background removed in favor of slider */

@@ -266,4 +266,60 @@ document.addEventListener('DOMContentLoaded', () => {
             slides[currentSlide].classList.add('active');
         }, slideInterval);
     }
+
+    // FETCH LIVE SITE CONFIG (Headlines/Announcements)
+    if (typeof supabase !== 'undefined') {
+        fetchSiteConfig();
+    }
 });
+
+async function fetchSiteConfig() {
+    try {
+        const { data, error } = await window.supabase
+            .from('site_config')
+            .select('*');
+
+        if (data && data.length > 0) {
+            const config = {};
+            data.forEach(item => config[item.key] = item.value);
+
+            // Update Headlines
+            const titleEl = document.querySelector('.hero-text h1');
+            const subEl = document.querySelector('.hero-text p.lead-text');
+
+            if (config.hero_headline && titleEl) {
+                // Keep the span logic if possible, or just replace text
+                // Simple replacement to be safe:
+                titleEl.innerHTML = config.hero_headline.replace(/\n/g, '<br>');
+            }
+            if (config.hero_sub && subEl) {
+                subEl.textContent = config.hero_sub;
+            }
+
+            // Announcement Bar
+            if (config.announcement) {
+                const nav = document.querySelector('.navbar');
+                // Avoid duplicates
+                if (!document.querySelector('.announcement-bar')) {
+                    const bar = document.createElement('div');
+                    bar.className = 'announcement-bar';
+                    bar.style.background = '#000';
+                    bar.style.color = 'white';
+                    bar.style.textAlign = 'center';
+                    bar.style.padding = '8px';
+                    bar.style.fontSize = '0.9rem';
+                    bar.style.fontWeight = '500';
+                    bar.innerHTML = config.announcement;
+
+                    // Prepend to body or before nav
+                    document.body.insertBefore(bar, document.body.firstChild);
+
+                    // Adjust nav top if it's fixed/sticky
+                    if (nav) nav.style.top = bar.offsetHeight + 'px';
+                }
+            }
+        }
+    } catch (e) {
+        console.warn("Could not load dynamic config:", e);
+    }
+}

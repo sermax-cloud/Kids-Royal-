@@ -18,6 +18,8 @@ const admin = {
         document.getElementById('login-overlay').classList.add('hidden');
         console.log("Admin Initialized. Loading data...");
 
+        document.getElementById('product-table-body').innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary-color);"></i></td></tr>';
+
         // Fetch Products
         try {
             this.products = await db.getAllProducts();

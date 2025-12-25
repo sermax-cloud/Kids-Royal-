@@ -96,24 +96,41 @@ window.db = {
                     return this.saveProduct(product); // Retry with new name
                 }
 
-                // Column doesn't exist? (e.g. description/benefit missing)
+                // Column doesn't exist? (e.g. description/benefit/original_price missing)
                 // Error code 42703 is "undefined_column"
                 if (error.code === '42703') {
-                    // Try saving minimal data (only what we verified exists in screenshot)
-                    const minimal = {
-                        id: product.id,
-                        name: product.name,
-                        price: product.price,
-                        image: product.image,
-                        category: product.category
-                        // Exclude description, benefit, created_at if they fail
-                    };
-                    const retry = await supabaseClient.from(this.tableName).upsert(minimal);
-                    if (retry.error) {
-                        alert("Cloud Save Failed: " + retry.error.message);
-                        throw retry.error;
+                    // Attempt 2: Try without 'original_price', but KEEP description/benefit
+                    // This handles the case where users haven't run the SQL for the new column yet
+                    const { original_price, ...productWithoutPrice } = product;
+
+                    const retry1 = await supabaseClient.from(this.tableName).upsert(productWithoutPrice);
+
+                    if (retry1.error) {
+                        // Attempt 3: Fail-safe (Minimal data only)
+                        // If it still fails (maybe description is missing?), go to minimal
+                        const minimal = {
+                            id: product.id,
+                            name: product.name,
+                            price: product.price,
+                            image: product.image,
+                            category: product.category,
+                            created_at: product.created_at
+                        };
+
+                        const retry2 = await supabaseClient.from(this.tableName).upsert(minimal);
+
+                        if (retry2.error) {
+                            alert("Cloud Save Failed: " + retry2.error.message);
+                            throw retry2.error;
+                        } else {
+                            // Success on minimal
+                            console.warn("Saved with minimal columns (original_price/description/benefit dropped)");
+                            alert("Saved partially! (Column mismatch). Please run the SQL script to fix DB schema.");
+                        }
                     } else {
-                        console.warn("Saved with missing columns (Description/Benefit not saved to cloud)");
+                        // Success on Attempt 2
+                        console.warn("Saved without original_price (Column missing in DB)");
+                        // We don't alert here to avoid spamming, just silent compatibility
                     }
                 } else {
                     alert("Error saving to cloud: " + error.message);

@@ -390,8 +390,8 @@ const admin = {
                      onclick="if(!event.target.classList.contains('action-btn-sm')) { admin.switchView('products'); document.querySelector('input[type=search]').value='${col.id}'; admin.filterTable('${col.id}'); }">
                     
                     <div style="position:absolute; top:5px; right:5px; display:flex; gap:5px;">
-                        <button class="action-btn-sm" onclick="admin.openCollectionModal('${col.id}', '${col.name}', '${col.icon}')" style="border:none; background:none; color:#aeaeae; cursor:pointer;" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                        ${isCustom ? `<button class="action-btn-sm" onclick="admin.deleteCollection('${col.id}')" style="border:none; background:none; color:#f00; cursor:pointer;" title="Delete">&times;</button>` : ''}
+                        <button class="action-btn-sm" onclick="event.stopPropagation(); admin.openCollectionModal('${col.id}', '${col.name}', '${col.icon}')" style="border:none; background:none; color:#aeaeae; cursor:pointer;" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                        ${isCustom ? `<button class="action-btn-sm" onclick="event.stopPropagation(); admin.deleteCollection('${col.id}')" style="border:none; background:none; color:#f00; cursor:pointer;" title="Delete">&times;</button>` : ''}
                     </div>
                     
                     <i class="fa-solid ${col.icon || 'fa-folder'}" style="font-size:2.5rem; color:#FFD700; margin-bottom:15px;"></i>

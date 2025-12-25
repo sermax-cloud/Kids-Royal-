@@ -147,14 +147,20 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="products.js"></script>
+    <script src="db.js"></script>
     <script src="script.js"></script>
     <script>
         // Use inline script for page-specific logic to keep script.js clean
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const params = new URLSearchParams(window.location.search);
             const productId = params.get('id');
-            const product = products.find(p => p.id === productId);
+
+            // Show simple loader on image or title
+            document.getElementById('p-title').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+
+            const product = await db.getProductById(productId);
 
             if (!product) {
                 document.querySelector('.product-details-section .container').innerHTML = `
@@ -167,16 +173,16 @@
 
             // Populate Data
             document.title = `${product.name} - KIDS ROYAL`;
-            document.querySelector('meta[name="description"]').setAttribute("content", product.description);
+            document.querySelector('meta[name="description"]').setAttribute("content", product.description || '');
 
             document.getElementById('cur-prod-name').textContent = product.name;
             document.getElementById('p-image').src = product.image;
             document.getElementById('p-image').alt = product.name;
-            document.getElementById('p-category').textContent = product.category.replace('-', ' ').toUpperCase();
+            document.getElementById('p-category').textContent = (product.category || '').replace('-', ' ').toUpperCase();
             document.getElementById('p-title').textContent = product.name;
-            document.getElementById('p-benefit').textContent = product.benefit;
+            document.getElementById('p-benefit').textContent = product.benefit || '';
             document.getElementById('p-price').textContent = product.price;
-            document.getElementById('p-desc').textContent = product.description;
+            document.getElementById('p-desc').textContent = product.description || '';
 
             // Buttons
             const waMsg = `Hello KIDS ROYAL, I am interested in buying: ${product.name} (${product.price})`;
@@ -185,17 +191,17 @@
             // Add to Cart Logic
             document.getElementById('add-to-cart-btn').onclick = () => {
                 cart.add(product);
-                // cart.openCart(); // is handled inside cart.add() if we updated it, or we can force it here
             };
 
             // Related Products (Same category, exclude current)
-            const related = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
+            const allProducts = await db.getAllProducts();
+            const related = allProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
             const relatedGrid = document.getElementById('related-grid');
 
             if (related.length > 0) {
                 relatedGrid.innerHTML = related.map(p => {
                     // Escape quotes
-                    const safeP = JSON.stringify(p).replace(/'/g, "&#39;");
+                    const safeP = JSON.stringify(p).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
                     return `
                         <div class="product-card">
                             <div class="prod-image">
@@ -203,6 +209,7 @@
                             </div>
                             <div class="prod-details">
                                 <h3 class="prod-title"><a href="product.html?id=${p.id}">${p.name}</a></h3>
+                                <div style="flex-grow:1"></div>
                                 <span class="prod-price">${p.price}</span>
                                 <button class="order-btn" onclick='cart.add(${safeP})'>
                                     <i class="fa-solid fa-cart-plus"></i> Add

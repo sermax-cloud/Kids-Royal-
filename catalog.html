@@ -303,11 +303,14 @@
     </a>
 
     <!-- Scripts -->
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="products.js"></script>
+    <script src="db.js"></script>
     <script src="script.js"></script>
     <script>
         // Catalog Logic
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const params = new URLSearchParams(window.location.search);
             const category = params.get('category') || 'all';
 
@@ -329,8 +332,17 @@
             pageTitle.textContent = formatName(safeCategory);
             crumbName.textContent = formatName(safeCategory);
 
+            // Show Loading State
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i><p>Loading products...</p></div>';
+
             // Fetch and render
-            const items = getProductsByCategory(safeCategory === 'all' ? 'all' : safeCategory);
+            let allProducts = await db.getAllProducts();
+
+            // Filter
+            let items = allProducts;
+            if (safeCategory !== 'all') {
+                items = allProducts.filter(p => p.category === safeCategory);
+            }
 
             if (items.length === 0) {
                 grid.innerHTML = `
@@ -343,13 +355,14 @@
             } else {
                 grid.innerHTML = items.map(product => {
                     // Escape single quotes for the inline onclick handler
-                    const safeProduct = JSON.stringify(product).replace(/'/g, "&#39;");
+                    // Note: Ideally moving away from inline onclick helps, but for now we sanitize
+                    const safeProduct = JSON.stringify(product).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
 
                     return `
                         <div class="product-card fade-in-up">
                             <div class="prod-image">
                                 <a href="product.html?id=${product.id}">
-                                    <img src="${product.image}" alt="${product.name}">
+                                    <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
                                 </a>
                             </div>
                             <div class="prod-details">
@@ -357,7 +370,7 @@
                                 <h3 class="prod-title">
                                     <a href="product.html?id=${product.id}">${product.name}</a>
                                 </h3>
-                                <p class="prod-benefit">${product.benefit}</p>
+                                <p class="prod-benefit">${product.benefit || ''}</p>
                                 <span class="prod-price">${product.price}</span>
                                 <button class="order-btn" onclick='cart.add(${safeProduct})'>
                                     <i class="fa-solid fa-cart-plus"></i> Add to Cart

@@ -34,7 +34,18 @@ window.db = {
     async getAllProducts() {
         try {
             if (supabase) {
-                const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+                // Try lowercase 'products' first
+                let { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+
+                // If that fails, try Capitalized 'Products' (Common user error)
+                if (error && error.code === '42P01') { // 42P01 is "undefined_table"
+                    const res = await supabase.from('Products').select('*').order('created_at', { ascending: false });
+                    data = res.data;
+                    error = res.error;
+                    // Remember the correct table name for later
+                    if (!error) this.tableName = 'Products';
+                }
+
                 if (error) {
                     console.warn("Supabase Error (Switching to local):", error);
                     return this.getLocalProducts();
@@ -48,9 +59,23 @@ window.db = {
         return this.getLocalProducts();
     },
 
+    tableName: 'products', // Default
+
     async getProductById(id) {
         if (supabase) {
-            const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
+            // Use the table name we detected (or default)
+            let { data, error } = await supabase.from(this.tableName).select('*').eq('id', id).single();
+
+            // Fallback check if we haven't detected table name yet
+            if (error && this.tableName === 'products') {
+                const res = await supabase.from('Products').select('*').eq('id', id).single();
+                if (!res.error) {
+                    this.tableName = 'Products';
+                    data = res.data;
+                    error = null;
+                }
+            }
+
             if (error) return null;
             return data;
         } else {
@@ -61,27 +86,60 @@ window.db = {
 
     // --- WRITE ---
     async saveProduct(product) {
-        // Ensure created_at exists for sorting if new
+        // Ensure created_at exists
         if (!product.created_at) product.created_at = new Date().toISOString();
 
         if (supabase) {
-            // Upsert (Insert or Update) based on ID
-            const { data, error } = await supabase.from('products').upsert(product);
+            // 1. Try Normal Save
+            const { error } = await supabase.from(this.tableName).upsert(product);
+
+            // 2. Handle specific errors
             if (error) {
-                alert("Error saving to cloud: " + error.message);
-                throw error;
+                // Table doesn't exist? Try 'Products'
+                if (error.code === '42P01' && this.tableName === 'products') {
+                    this.tableName = 'Products';
+                    return this.saveProduct(product); // Retry with new name
+                }
+
+                // Column doesn't exist? (e.g. description/benefit missing)
+                // Error code 42703 is "undefined_column"
+                if (error.code === '42703') {
+                    // Try saving minimal data (only what we verified exists in screenshot)
+                    const minimal = {
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.image,
+                        category: product.category
+                        // Exclude description, benefit, created_at if they fail
+                    };
+                    const retry = await supabase.from(this.tableName).upsert(minimal);
+                    if (retry.error) {
+                        alert("Cloud Save Failed: " + retry.error.message);
+                        throw retry.error;
+                    } else {
+                        console.warn("Saved with missing columns (Description/Benefit not saved to cloud)");
+                    }
+                } else {
+                    alert("Error saving to cloud: " + error.message);
+                    throw error;
+                }
             }
         }
 
-        // Always save to local as backup/immediate cache
+        // Always save to local as backup
         this.saveLocal(product);
         return true;
     },
 
     async deleteProduct(id) {
         if (supabase) {
-            const { error } = await supabase.from('products').delete().eq('id', id);
+            const { error } = await supabase.from(this.tableName).delete().eq('id', id);
             if (error) {
+                if (error.code === '42P01' && this.tableName === 'products') {
+                    this.tableName = 'Products';
+                    return this.deleteProduct(id);
+                }
                 alert("Error deleting from cloud: " + error.message);
                 throw error;
             }

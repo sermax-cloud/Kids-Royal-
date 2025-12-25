@@ -1,0 +1,13 @@
+-- 1. Rename table to lowercase 'products' to match the code
+ALTER TABLE "Products" RENAME TO "products";
+
+-- 2. Add the missing columns so product details can be saved
+ALTER TABLE "products" 
+ADD COLUMN IF NOT EXISTS description text,
+ADD COLUMN IF NOT EXISTS benefit text,
+ADD COLUMN IF NOT EXISTS created_at timestamptz DEFAULT now();
+
+-- 3. Allow public access (so your site can read/write data)
+ALTER TABLE "products" ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public Access" ON "products";
+CREATE POLICY "Public Access" ON "products" FOR ALL USING (true) WITH CHECK (true);

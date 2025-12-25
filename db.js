@@ -22,16 +22,20 @@ if (SUPABASE_URL && SUPABASE_KEY && typeof createClient !== 'undefined') {
 const db = {
     // --- READ ---
     async getAllProducts() {
-        if (supabase) {
-            const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
-            if (error) {
-                console.error("Supabase Error:", error);
-                return this.getLocalProducts();
+        try {
+            if (supabase) {
+                const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+                if (error) {
+                    console.warn("Supabase Error (Switching to local):", error);
+                    return this.getLocalProducts();
+                }
+                return data || [];
             }
-            return data;
-        } else {
+        } catch (err) {
+            console.error("DB Fetch Error:", err);
             return this.getLocalProducts();
         }
+        return this.getLocalProducts();
     },
 
     async getProductById(id) {

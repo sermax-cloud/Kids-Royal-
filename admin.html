@@ -19,6 +19,18 @@
 
 <body>
 
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card">
+            <i class="fa-solid fa-lock"></i>
+            <h2>Admin Access</h2>
+            <form onsubmit="admin.checkLogin(event)">
+                <input type="password" id="admin-password" placeholder="Enter Password" required>
+                <button type="submit" class="btn-primary" style="justify-content: center;">Login</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Sidebar -->
     <nav class="sidebar">
         <div class="brand">
@@ -34,7 +46,7 @@
             <li><a href="#" class="nav-item" onclick="admin.switchView('gallery')"><i class="fa-solid fa-images"></i>
                     Gallery</a></li>
         </ul>
-        <div class="logout-btn">
+        <div class="logout-btn" onclick="admin.logout()">
             <i class="fa-solid fa-right-from-bracket"></i> Logout
         </div>
     </nav>

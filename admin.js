@@ -2,6 +2,14 @@ const admin = {
     products: [],
 
     async init() {
+        // Check Auth
+        if (!sessionStorage.getItem('kids_royal_auth')) {
+            // Not logged in, stop init (overlay is visible by default)
+            return;
+        }
+        // Logged in, hide overlay
+        document.getElementById('login-overlay').classList.add('hidden');
+
         // Fetch from DB (Supabase or Local)
         this.products = await db.getAllProducts();
 
@@ -188,6 +196,28 @@ const admin = {
         } else if (viewName === 'gallery') {
             document.getElementById('view-gallery').style.display = 'block';
         }
+    },
+
+    checkLogin(e) {
+        e.preventDefault();
+        const input = document.getElementById('admin-password');
+        const pass = input.value;
+
+        // Simple client-side check (Default: "admin123")
+        // You can change this string to whatever you want
+        if (pass === 'admin123') {
+            sessionStorage.setItem('kids_royal_auth', 'true');
+            document.getElementById('login-overlay').classList.add('hidden');
+            this.init(); // Load data now
+        } else {
+            alert('Incorrect Password');
+            input.value = '';
+        }
+    },
+
+    logout() {
+        sessionStorage.removeItem('kids_royal_auth');
+        window.location.reload();
     }
 };
 

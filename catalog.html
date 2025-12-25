@@ -336,58 +336,64 @@
             grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i><p>Loading products...</p></div>';
 
             // Fetch and render
-            let allProducts = await db.getAllProducts();
+            try {
+                let allProducts = await db.getAllProducts();
 
-            // Filter
-            let items = allProducts;
-            if (safeCategory !== 'all') {
-                items = allProducts.filter(p => p.category === safeCategory);
-            }
+                // Filter
+                let items = allProducts || [];
+                if (safeCategory !== 'all') {
+                    items = items.filter(p => p.category === safeCategory);
+                }
 
-            if (items.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fa-regular fa-folder-open"></i>
-                        <h3>No products found in this category yet.</h3>
-                        <p>Check back soon or browse other categories.</p>
-                    </div>
-                `;
-            } else {
-                grid.innerHTML = items.map(product => {
-                    // Escape single quotes for the inline onclick handler
-                    // Note: Ideally moving away from inline onclick helps, but for now we sanitize
-                    const safeProduct = JSON.stringify(product).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-
-                    return `
-                        <div class="product-card fade-in-up">
-                            <div class="prod-image">
-                                <a href="product.html?id=${product.id}">
-                                    <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
-                                </a>
-                            </div>
-                            <div class="prod-details">
-                                <span class="prod-category">${formatName(product.category)}</span>
-                                <h3 class="prod-title">
-                                    <a href="product.html?id=${product.id}">${product.name}</a>
-                                </h3>
-                                <p class="prod-benefit">${product.benefit || ''}</p>
-                                <span class="prod-price">${product.price}</span>
-                                <button class="order-btn" onclick='cart.add(${safeProduct})'>
-                                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
-                                </button>
-                            </div>
+                if (items.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fa-regular fa-folder-open"></i>
+                            <h3>No products found in this category yet.</h3>
+                            <p>Check back soon or browse other categories.</p>
                         </div>
                     `;
-                }).join('');
+                } else {
+                    grid.innerHTML = items.map(product => {
+                        // Escape single quotes for the inline onclick handler
+                        // Note: Ideally moving away from inline onclick helps, but for now we sanitize
+                        const safeProduct = JSON.stringify(product).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
 
-                // Re-trigger observer for new elements
-                const newElements = document.querySelectorAll('.product-card');
-                if (typeof observer !== 'undefined') {
-                    newElements.forEach(el => observer.observe(el));
+                        return `
+                            <div class="product-card fade-in-up">
+                                <div class="prod-image">
+                                    <a href="product.html?id=${product.id}">
+                                        <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
+                                    </a>
+                                </div>
+                                <div class="prod-details">
+                                    <span class="prod-category">${formatName(product.category || 'general')}</span>
+                                    <h3 class="prod-title">
+                                        <a href="product.html?id=${product.id}">${product.name}</a>
+                                    </h3>
+                                    <p class="prod-benefit">${product.benefit || ''}</p>
+                                    <span class="prod-price">${product.price}</span>
+                                    <button class="order-btn" onclick='cart.add(${safeProduct})'>
+                                        <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    // Re-trigger observer for new elements
+                    const newElements = document.querySelectorAll('.product-card');
+                    if (typeof observer !== 'undefined') {
+                        newElements.forEach(el => observer.observe(el));
+                    }
                 }
+            } catch (err) {
+                console.error('Catalog Error:', err);
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: red;"><p>Error loading products. Please try refreshing.</p></div>`;
             }
         });
     </script>
 </body>
 
 </html>
+```

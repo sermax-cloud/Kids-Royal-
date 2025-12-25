@@ -23,8 +23,14 @@ const admin = {
         this.updateStats();
         this.renderTable();
         this.updateStats();
+        this.renderTable();
+        this.updateStats();
         this.renderGallery();
-        this.renderCollections(); // Init Collections
+        this.renderCollections();
+
+        // Init New Sections
+        if (this.loadBlog) this.loadBlog();
+        if (this.loadConfig) this.loadConfig();
 
         if (supabase) {
             const header = document.querySelector('.header');
@@ -65,6 +71,11 @@ const admin = {
                 <td><strong>${p.name}</strong></td>
                 <td><span style="text-transform: capitalize;">${(p.category || '').replace('-', ' ')}</span></td>
                 <td>${p.price}</td>
+                <td>
+                    <i class="fa-${p.is_featured ? 'solid' : 'regular'} fa-star" 
+                       style="color: gold; cursor: pointer;" 
+                       onclick="admin.toggleFeatured('${p.id}', ${!p.is_featured})"></i>
+                </td>
                 <td>
                     <button class="action-btn edit" onclick="admin.editProduct('${p.id}')"><i class="fa-solid fa-pen"></i></button>
                     <button class="action-btn delete" onclick="admin.deleteProduct('${p.id}')"><i class="fa-solid fa-trash"></i></button>
@@ -112,6 +123,9 @@ const admin = {
 
         try {
             const id = document.getElementById('prodId').value;
+            // Get Featured State from existing status or default false
+            const existing = this.products.find(x => x.id === id);
+
             const newProduct = {
                 id: id || 'prod_' + Date.now(),
                 name: document.getElementById('prodName').value,
@@ -121,6 +135,7 @@ const admin = {
                 benefit: document.getElementById('prodBenefit').value,
                 image: document.getElementById('prodImage').value,
                 description: document.getElementById('prodDesc').value,
+                is_featured: existing ? existing.is_featured : false, // Preserve Featured State
                 created_at: new Date().toISOString()
             };
 
@@ -207,11 +222,119 @@ const admin = {
             document.getElementById('view-products').style.display = 'block';
         } else if (viewName === 'collections') {
             document.getElementById('view-collections').style.display = 'block';
+        } else if (viewName === 'blog') {
+            document.getElementById('view-blog').style.display = 'block';
+        } else if (viewName === 'settings') {
+            document.getElementById('view-settings').style.display = 'block';
         } else if (viewName === 'orders') {
             document.getElementById('view-orders').style.display = 'block';
         } else if (viewName === 'gallery') {
             document.getElementById('view-gallery').style.display = 'block';
         }
+    },
+
+    // --- FEATURED LOGIC ---
+    async toggleFeatured(id, newState) {
+        if (!supabaseClient) return alert("Connect Supabase to use this feature.");
+
+        // Optimistic UI Update
+        const p = this.products.find(x => x.id === id);
+        if (p) p.is_featured = newState;
+        this.renderTable();
+
+        const { error } = await supabaseClient.from('products').update({ is_featured: newState }).eq('id', id);
+
+        if (error) {
+            // Revert if failed (missing column?)
+            alert("Failed to update: " + error.message);
+            p.is_featured = !newState;
+            this.renderTable();
+
+            if (error.code === '42703') {
+                alert("NOTE: Run the 'feature_upgrade.sql' script to enable Featured items.");
+            }
+        }
+    },
+
+    // --- BLOG LOGIC ---
+    async loadBlog() {
+        if (!supabaseClient) return;
+        const { data } = await supabaseClient.from('blog_posts').select('*');
+        if (data) {
+            const grid = document.getElementById('blog-grid');
+            grid.innerHTML = data.map(post => `
+                <div style="background:white; padding:20px; border-radius:8px; border:1px solid #eee;">
+                    <h4><i class="${post.category || 'fa-solid fa-star'}"></i> ${post.title}</h4>
+                    <p style="color:#666; font-size:0.9rem; height: 60px; overflow:hidden;">${post.content}</p>
+                    <button class="btn-secondary" style="margin-top:10px; font-size:0.8rem;" onclick="admin.deleteBlog('${post.id}')">Delete</button>
+                </div>
+             `).join('');
+        }
+    },
+
+    openBlogModal() {
+        document.getElementById('blogModal').classList.add('active');
+    },
+
+    async saveBlogPost(e) {
+        e.preventDefault();
+        const title = document.getElementById('blogTitle').value;
+        const content = document.getElementById('blogContent').value;
+        const icon = document.getElementById('blogIcon').value;
+
+        if (supabaseClient) {
+            await supabaseClient.from('blog_posts').insert([{
+                id: 'post_' + Date.now(),
+                title: title,
+                content: content,
+                category: icon
+            }]);
+            document.getElementById('blogForm').reset();
+            document.getElementById('blogModal').classList.remove('active');
+            this.loadBlog();
+            alert("Post Published!");
+        } else {
+            alert("Connect Supabase to publish posts.");
+        }
+    },
+
+    async deleteBlog(id) {
+        if (confirm("Delete this post?")) {
+            await supabaseClient.from('blog_posts').delete().eq('id', id);
+            this.loadBlog();
+        }
+    },
+
+    // --- CONFIG LOGIC ---
+    async loadConfig() {
+        if (!supabaseClient) return;
+        const { data } = await supabaseClient.from('site_config').select('*');
+        if (data) {
+            const map = {};
+            data.forEach(item => map[item.key] = item.value);
+
+            if (map['hero_headline']) document.getElementById('conf-headline').value = map['hero_headline'];
+            if (map['hero_sub']) document.getElementById('conf-sub').value = map['hero_sub'];
+            if (map['announcement']) document.getElementById('conf-announcement').value = map['announcement'];
+        }
+    },
+
+    async saveSiteConfig() {
+        const headline = document.getElementById('conf-headline').value;
+        const sub = document.getElementById('conf-sub').value;
+        const announce = document.getElementById('conf-announcement').value;
+
+        if (!supabaseClient) return alert("Connect Supabase first.");
+
+        const upserts = [
+            { key: 'hero_headline', value: headline },
+            { key: 'hero_sub', value: sub },
+            { key: 'announcement', value: announce }
+        ];
+
+        const { error } = await supabaseClient.from('site_config').upsert(upserts);
+        if (!error) alert("Site Settings Saved!");
+        else alert("Error: " + error.message);
     },
 
     // --- COLLECTIONS LOGIC ---

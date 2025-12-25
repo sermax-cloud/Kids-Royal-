@@ -119,6 +119,7 @@
                         <th>Name</th>
                         <th>Category</th>
                         <th>Price</th>
+                        <th>Featured</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -126,6 +127,44 @@
                     <!-- Rows injected via JS -->
                 </tbody>
             </table>
+        </div>
+
+        <!-- BLOG VIEW -->
+        <div id="view-blog" class="admin-view" style="display: none;">
+            <header class="header">
+                <h2>Blog & Tips Manager</h2>
+                <button class="btn-primary" onclick="admin.openBlogModal()">
+                    <i class="fa-solid fa-plus"></i> New Post
+                </button>
+            </header>
+            <div id="blog-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                <!-- Blog Items -->
+            </div>
+        </div>
+
+        <!-- SETTINGS VIEW (Site Content) -->
+        <div id="view-settings" class="admin-view" style="display: none;">
+            <header class="header">
+                <h2>Site Content & Settings</h2>
+            </header>
+
+            <div class="card" style="background:white; padding:30px; border-radius:12px; max-width: 600px;">
+                <h3>Homepage Hero</h3>
+                <div class="form-group">
+                    <label>Main Headline</label>
+                    <input type="text" id="conf-headline" placeholder="e.g. Give Your Baby the Royal Start">
+                </div>
+                <div class="form-group">
+                    <label>Sub Headline</label>
+                    <textarea id="conf-sub" rows="2" placeholder="e.g. Welcome to a world of comfort..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Announcement Bar (Top)</label>
+                    <input type="text" id="conf-announcement" placeholder="e.g. Free Delivery on Orders over GHS 500!">
+                </div>
+                <button class="btn-primary" onclick="admin.saveSiteConfig()">Save Changes</button>
+            </div>
         </div>
 
         </div>
@@ -233,6 +272,35 @@
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary" onclick="admin.closeModal()">Cancel</button>
                     <button type="submit" class="btn-primary">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Blog Modal -->
+    <div class="modal" id="blogModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Blog Post</h3>
+                <button class="action-btn" onclick="document.getElementById('blogModal').classList.remove('active')"><i
+                        class="fa-solid fa-times"></i></button>
+            </div>
+            <form id="blogForm" onsubmit="admin.saveBlogPost(event)">
+                <input type="hidden" id="blogId">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="blogTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Category Icon (FontAwesome)</label>
+                    <input type="text" id="blogIcon" placeholder="fa-solid fa-baby" value="fa-solid fa-star">
+                </div>
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea id="blogContent" rows="6" placeholder="Write your tips here..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-primary">Publish</button>
                 </div>
             </form>
         </div>

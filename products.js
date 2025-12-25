@@ -143,3 +143,6 @@ function getProductsByCategory(category) {
     if (!category || category === 'all') return products;
     return products.filter(product => product.category === category);
 }
+
+// Ensure global access
+window.products = products;

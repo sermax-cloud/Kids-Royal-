@@ -15,17 +15,12 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 // Initialize client if keys exist
 // Initialize client if keys exist
-let supabase = null;
+let supabaseClient = null;
 
-// Check for global Supabase object (UMD build)
-if (typeof supabase !== 'undefined' && supabase.createClient) {
+// Check for global Supabase library (exposed as window.supabase by the CDN)
+if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
     if (SUPABASE_URL && SUPABASE_KEY) {
-        supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    }
-} else if (typeof createClient !== 'undefined') {
-    // Fallback if createClient is global
-    if (SUPABASE_URL && SUPABASE_KEY) {
-        supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     }
 }
 
@@ -33,13 +28,13 @@ window.db = {
     // --- READ ---
     async getAllProducts() {
         try {
-            if (supabase) {
+            if (supabaseClient) {
                 // Try lowercase 'products' first
-                let { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+                let { data, error } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
 
                 // If that fails, try Capitalized 'Products' (Common user error)
                 if (error && error.code === '42P01') { // 42P01 is "undefined_table"
-                    const res = await supabase.from('Products').select('*').order('created_at', { ascending: false });
+                    const res = await supabaseClient.from('Products').select('*').order('created_at', { ascending: false });
                     data = res.data;
                     error = res.error;
                     // Remember the correct table name for later
@@ -62,13 +57,13 @@ window.db = {
     tableName: 'products', // Default
 
     async getProductById(id) {
-        if (supabase) {
+        if (supabaseClient) {
             // Use the table name we detected (or default)
-            let { data, error } = await supabase.from(this.tableName).select('*').eq('id', id).single();
+            let { data, error } = await supabaseClient.from(this.tableName).select('*').eq('id', id).single();
 
             // Fallback check if we haven't detected table name yet
             if (error && this.tableName === 'products') {
-                const res = await supabase.from('Products').select('*').eq('id', id).single();
+                const res = await supabaseClient.from('Products').select('*').eq('id', id).single();
                 if (!res.error) {
                     this.tableName = 'Products';
                     data = res.data;
@@ -89,9 +84,9 @@ window.db = {
         // Ensure created_at exists
         if (!product.created_at) product.created_at = new Date().toISOString();
 
-        if (supabase) {
+        if (supabaseClient) {
             // 1. Try Normal Save
-            const { error } = await supabase.from(this.tableName).upsert(product);
+            const { error } = await supabaseClient.from(this.tableName).upsert(product);
 
             // 2. Handle specific errors
             if (error) {
@@ -113,7 +108,7 @@ window.db = {
                         category: product.category
                         // Exclude description, benefit, created_at if they fail
                     };
-                    const retry = await supabase.from(this.tableName).upsert(minimal);
+                    const retry = await supabaseClient.from(this.tableName).upsert(minimal);
                     if (retry.error) {
                         alert("Cloud Save Failed: " + retry.error.message);
                         throw retry.error;
@@ -133,8 +128,8 @@ window.db = {
     },
 
     async deleteProduct(id) {
-        if (supabase) {
-            const { error } = await supabase.from(this.tableName).delete().eq('id', id);
+        if (supabaseClient) {
+            const { error } = await supabaseClient.from(this.tableName).delete().eq('id', id);
             if (error) {
                 if (error.code === '42P01' && this.tableName === 'products') {
                     this.tableName = 'Products';

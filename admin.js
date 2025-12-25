@@ -1,6 +1,8 @@
 const admin = {
     products: [],
 
+    gallery: [], // Gallery Items
+
     async init() {
         // Check Auth
         if (!sessionStorage.getItem('kids_royal_auth')) {
@@ -10,11 +12,15 @@ const admin = {
         // Logged in, hide overlay
         document.getElementById('login-overlay').classList.add('hidden');
 
-        // Fetch from DB (Supabase or Local)
+        // Fetch Products
         this.products = await db.getAllProducts();
+
+        // Fetch Gallery (Mock for now, or new table later)
+        // this.gallery = await db.getAllGalleryItems(); 
 
         this.renderTable();
         this.updateStats();
+        this.renderGallery(); // Render Gallery
 
         if (supabase) {
             const header = document.querySelector('.header');
@@ -195,6 +201,54 @@ const admin = {
             document.getElementById('view-orders').style.display = 'block';
         } else if (viewName === 'gallery') {
             document.getElementById('view-gallery').style.display = 'block';
+        }
+    },
+
+    // --- GALLERY LOGIC ---
+    renderGallery() {
+        // Using local storage for gallery demo until specific DB table is made
+        const storedGallery = JSON.parse(localStorage.getItem('kids_royal_gallery')) || [];
+        this.gallery = storedGallery;
+
+        const grid = document.getElementById('gallery-grid');
+        if (!grid) return;
+
+        if (this.gallery.length === 0) {
+            grid.innerHTML = '<p style="grid-column:1/-1; color:#999; text-align:center;">No images in gallery.</p>';
+        } else {
+            grid.innerHTML = this.gallery.map(img => `
+                <div style="position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <img src="${img.url}" style="width:100%; height:100%; object-fit: cover;" alt="Gallery Image">
+                    <button onclick="admin.deleteGalleryImage('${img.id}')" style="position: absolute; top: 5px; right: 5px; background: rgba(255,0,0,0.8); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer;">&times;</button>
+                </div>
+            `).join('');
+        }
+    },
+
+    addGalleryImage() {
+        const url = prompt("Enter Image URL:");
+        if (url) {
+            const newImg = {
+                id: 'img_' + Date.now(),
+                url: url,
+                created_at: new Date().toISOString()
+            };
+
+            // Save to Local Storage (or switch to DB later)
+            const current = JSON.parse(localStorage.getItem('kids_royal_gallery')) || [];
+            current.unshift(newImg);
+            localStorage.setItem('kids_royal_gallery', JSON.stringify(current));
+
+            this.renderGallery();
+        }
+    },
+
+    deleteGalleryImage(id) {
+        if (confirm('Delete this image?')) {
+            let current = JSON.parse(localStorage.getItem('kids_royal_gallery')) || [];
+            current = current.filter(x => x.id !== id);
+            localStorage.setItem('kids_royal_gallery', JSON.stringify(current));
+            this.renderGallery();
         }
     },
 

@@ -127,30 +127,14 @@
         <div id="view-gallery" class="admin-view" style="display: none;">
             <header class="header">
                 <h2>Media Gallery</h2>
-                <button class="btn-primary">
-                    <i class="fa-solid fa-upload"></i> Upload Image
+                <button class="btn-primary" onclick="admin.addGalleryImage()">
+                    <i class="fa-solid fa-upload"></i> Add Image
                 </button>
             </header>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
-                <!-- Mock Gallery Items -->
-                <div
-                    style="aspect-ratio: 1; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa;">
-                    <i class="fa-solid fa-image" style="font-size: 2rem;"></i>
-                </div>
-                <div
-                    style="aspect-ratio: 1; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa;">
-                    <i class="fa-solid fa-image" style="font-size: 2rem;"></i>
-                </div>
-                <div
-                    style="aspect-ratio: 1; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa;">
-                    <i class="fa-solid fa-image" style="font-size: 2rem;"></i>
-                </div>
-                <div
-                    style="aspect-ratio: 1; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa;">
-                    <i class="fa-solid fa-image" style="font-size: 2rem;"></i>
-                </div>
+            <div id="gallery-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+                <!-- Gallery items injected via JS -->
             </div>
-            <p style="margin-top: 20px; color: #999; font-style: italic;">(Gallery management coming soon)</p>
         </div>
 
     </main>

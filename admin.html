@@ -59,7 +59,7 @@
             <header class="header">
                 <h2>Product Management</h2>
                 <div style="display: flex; gap: 10px;">
-                    <button class="btn-primary" onclick="admin.seedDatabase()"
+                    <button class="btn-primary" onclick="try{admin.seedDatabase()}catch(e){alert('Error: '+e.message)}"
                         style="background-color: var(--whatsapp-green);">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Upload Defaults
                     </button>

@@ -516,9 +516,17 @@ const admin = {
             grid.innerHTML = '<p style="grid-column:1/-1; color:#999; text-align:center;">No images in gallery.</p>';
         } else {
             grid.innerHTML = this.gallery.map(img => `
-                <div style="position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    <img src="${img.url}" style="width:100%; height:100%; object-fit: cover;" alt="Gallery Image">
-                    <button onclick="admin.deleteGalleryImage('${img.id}')" style="position: absolute; top: 5px; right: 5px; background: rgba(255,0,0,0.8); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer;">&times;</button>
+                <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <div style="position: relative; aspect-ratio: 1;">
+                        <img src="${img.url}" style="width:100%; height:100%; object-fit: cover;" alt="Gallery Image">
+                        <button onclick="admin.deleteGalleryImage('${img.id}')" style="position: absolute; top: 5px; right: 5px; background: rgba(255,0,0,0.8); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer;">&times;</button>
+                    </div>
+                    <div style="padding: 10px; display: flex; gap: 5px; align-items: center; border-top: 1px solid #f0f0f0;">
+                        <input type="text" value="${img.url}" readonly style="width: 100%; font-size: 0.75rem; padding: 6px; border: 1px solid #eee; border-radius: 4px; color: #666; background: #fafafa;" onclick="this.select()">
+                        <button onclick="navigator.clipboard.writeText('${img.url}').then(() => alert('Link Copied!'))" style="border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 4px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);" title="Copy Link">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
                 </div>
             `).join('');
         }

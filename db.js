@@ -14,12 +14,22 @@ const SUPABASE_URL = "https://iilbckohmseoroypzxra.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpbGJja29obXNlb3JveXB6eHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY2NjQ5MTQsImV4cCI6MjA4MjI0MDkxNH0.fBVsMdXetkvywo5Fo8MBfpSOG5ufYdApehluGwuubzw"; // <--- PASTE THE LONG 'eyJ...' KEY HERE
 
 // Initialize client if keys exist
+// Initialize client if keys exist
 let supabase = null;
-if (SUPABASE_URL && SUPABASE_KEY && typeof createClient !== 'undefined') {
-    supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Check for global Supabase object (UMD build)
+if (typeof supabase !== 'undefined' && supabase.createClient) {
+    if (SUPABASE_URL && SUPABASE_KEY) {
+        supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+} else if (typeof createClient !== 'undefined') {
+    // Fallback if createClient is global
+    if (SUPABASE_URL && SUPABASE_KEY) {
+        supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
 }
 
-const db = {
+window.db = {
     // --- READ ---
     async getAllProducts() {
         try {
@@ -83,8 +93,13 @@ const db = {
 
     // --- LOCAL STORAGE FALLBACK HELPERS ---
     getLocalProducts() {
-        const stored = localStorage.getItem('kids_royal_products');
-        if (stored) return JSON.parse(stored);
+        try {
+            const stored = localStorage.getItem('kids_royal_products');
+            if (stored) return JSON.parse(stored);
+        } catch (e) {
+            console.error("Local Storage Parse Error:", e);
+            // If corrupt, clear it? Or just ignore.
+        }
 
         // Use default static data if nothing in storage
         // (Assuming 'products' is loaded from products.js as a global backup)

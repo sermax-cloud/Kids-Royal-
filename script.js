@@ -316,9 +316,6 @@ async function fetchSiteConfig() {
 
                     // Prepend to body or before nav
                     document.body.insertBefore(bar, document.body.firstChild);
-
-                    // Adjust nav top if it's fixed/sticky
-                    if (nav) nav.style.top = bar.offsetHeight + 'px';
                 }
             }
         }

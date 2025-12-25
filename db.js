@@ -20,7 +20,10 @@ let supabaseClient = null;
 // Check for global Supabase library (exposed as window.supabase by the CDN)
 if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
     if (SUPABASE_URL && SUPABASE_KEY) {
+        // Initialize client
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Expose globally for other scripts (blog.html, script.js)
+        window.supabaseClient = supabaseClient;
     }
 }
 

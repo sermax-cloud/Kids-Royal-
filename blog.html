@@ -206,8 +206,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const container = document.getElementById('blog-articles-container');
-            if (container && window.supabase) {
-                const { data, error } = await window.supabase.from('blog_posts').select('*').order('created_at', { ascending: false });
+            if (container && window.supabaseClient) {
+                const { data, error } = await window.supabaseClient.from('blog_posts').select('*').order('created_at', { ascending: false });
 
                 if (data && data.length > 0) {
                     container.innerHTML = data.map(post => `

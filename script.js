@@ -275,7 +275,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function fetchSiteConfig() {
     try {
-        const { data, error } = await window.supabase
+        // Use the initialized client, not the library
+        if (!window.supabaseClient) return;
+
+        const { data, error } = await window.supabaseClient
             .from('site_config')
             .select('*');
 

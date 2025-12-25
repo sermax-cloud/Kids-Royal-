@@ -144,6 +144,38 @@ window.db = {
         return true;
     },
 
+    // --- STORAGE (Images) ---
+    async uploadImage(file) {
+        if (!supabaseClient) {
+            alert("Cloud database not connected. Cannot upload files.");
+            return null;
+        }
+
+        try {
+            const fileName = 'uploads/' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+
+            // 1. Upload
+            const { data, error } = await supabaseClient.storage.from('images').upload(fileName, file);
+
+            if (error) {
+                if (error.message.includes('Bucket not found')) {
+                    alert("SETUP REQUIRED: You need to create a public storage bucket named 'images' in your Supabase dashboard first.");
+                } else {
+                    alert("Upload Failed: " + error.message);
+                }
+                throw error;
+            }
+
+            // 2. Get Public URL
+            const { data: publicData } = supabaseClient.storage.from('images').getPublicUrl(fileName);
+            return publicData.publicUrl;
+
+        } catch (err) {
+            console.error("Upload Error:", err);
+            return null;
+        }
+    },
+
     // --- LOCAL STORAGE FALLBACK HELPERS ---
     getLocalProducts() {
         try {

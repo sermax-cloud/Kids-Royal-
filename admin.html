@@ -41,6 +41,9 @@
                         class="fa-solid fa-gauge-high"></i> Dashboard</a></li>
             <li><a href="#" class="nav-item" onclick="admin.switchView('products')"><i class="fa-solid fa-box-open"></i>
                     Products</a></li>
+            <li><a href="#" class="nav-item" onclick="admin.switchView('collections')"><i
+                        class="fa-solid fa-layer-group"></i>
+                    Collections</a></li>
             <li><a href="#" class="nav-item" onclick="admin.switchView('orders')"><i
                         class="fa-solid fa-bag-shopping"></i> Orders</a></li>
             <li><a href="#" class="nav-item" onclick="admin.switchView('gallery')"><i class="fa-solid fa-images"></i>
@@ -105,6 +108,22 @@
             </table>
         </div>
 
+        </div>
+
+        <!-- COLLECTIONS VIEW -->
+        <div id="view-collections" class="admin-view" style="display: none;">
+            <header class="header">
+                <h2>Collections</h2>
+                <button class="btn-primary" onclick="alert('Manage categories here (Coming Soon)')">
+                    <i class="fa-solid fa-plus"></i> New Collection
+                </button>
+            </header>
+            <div id="collections-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+                <!-- Auto-Generated from Products -->
+            </div>
+        </div>
+
         <!-- ORDERS VIEW (Placeholder) -->
         <div id="view-orders" class="admin-view" style="display: none;">
             <header class="header">
@@ -127,8 +146,9 @@
         <div id="view-gallery" class="admin-view" style="display: none;">
             <header class="header">
                 <h2>Media Gallery</h2>
-                <button class="btn-primary" onclick="admin.addGalleryImage()">
-                    <i class="fa-solid fa-upload"></i> Add Image
+                <h2>Media Gallery</h2>
+                <button class="btn-primary" onclick="admin.triggerUpload('gallery')">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload Image
                 </button>
             </header>
             <div id="gallery-grid"
@@ -172,8 +192,13 @@
                     <input type="text" id="prodBenefit">
                 </div>
                 <div class="form-group">
-                    <label>Image URL / Path</label>
-                    <input type="text" id="prodImage" placeholder="image.png or https://...">
+                    <label>Image</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="prodImage" placeholder="URL will appear here..." required>
+                        <button type="button" class="btn-secondary" onclick="admin.triggerUpload('product')">
+                            <i class="fa-solid fa-upload"></i> Upload
+                        </button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Description</label>
@@ -191,7 +216,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="products.js"></script>
     <script src="db.js"></script>
+    <script src="db.js"></script>
     <script src="admin.js"></script>
+
+    <!-- Hidden File Input for Uploads -->
+    <input type="file" id="global-upload" style="display: none;" accept="image/*"
+        onchange="admin.handleFileSelect(this)">
 </body>
 
 </html>

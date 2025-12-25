@@ -198,12 +198,14 @@ window.db = {
         }
 
         // Use default static data if nothing in storage
-        // (Assuming 'products' is loaded from products.js as a global backup)
+        // DISABLED: Do not fallback to static products. We want a clean slate if DB/Local is empty.
+        /*
         if (typeof products !== 'undefined') {
             // Seed local storage with defaults so we can edit them
             localStorage.setItem('kids_royal_products', JSON.stringify(products));
             return products;
         }
+        */
         return [];
     },
 

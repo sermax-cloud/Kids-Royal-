@@ -28,7 +28,7 @@ const admin = {
         if (this.loadBlog) this.loadBlog();
         if (this.loadConfig) this.loadConfig();
 
-        if (supabase) {
+        if (window.supabaseClient) {
             const header = document.querySelector('.header');
             // If DB is empty, highlight the Upload button
             if (this.products.length === 0) {

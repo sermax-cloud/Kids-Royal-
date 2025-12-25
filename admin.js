@@ -338,40 +338,52 @@ const admin = {
     },
 
     // --- COLLECTIONS LOGIC ---
-    renderCollections() {
+    async renderCollections() {
         // Render in BOTH the main collections view AND the dashboard overview
         const grids = [
             document.getElementById('collections-grid'),
             document.getElementById('dashboard-collections-grid')
         ];
 
-        // Combine Default Fixed + Custom Collections
-        const defaults = [
-            { id: 'baby-care', name: 'Baby Care', icon: 'fa-baby-carriage' },
-            { id: 'mother-care', name: 'Mother Care', icon: 'fa-heart' },
-            { id: 'feeding', name: 'Feeding Essentials', icon: 'fa-mug-hot' },
-            { id: 'skincare', name: 'Skincare', icon: 'fa-soap' },
-            { id: 'diapers', name: 'Diapers & Hygiene', icon: 'fa-layer-group' },
-            { id: 'gifts', name: 'Gifts', icon: 'fa-gift' }
-        ];
+        let allCols = [];
 
-        // Merge with any custom ones saved in local storage (for now)
-        // In a real app, these would be in a 'categories' table in Supabase
-        const custom = JSON.parse(localStorage.getItem('kids_royal_custom_cats')) || [];
-        const allCols = [...defaults, ...custom];
+        if (supabaseClient) {
+            // Fetch from DB
+            const { data, error } = await supabaseClient.from('categories').select('*');
+            if (data && data.length > 0) {
+                allCols = data;
+            } else {
+                // Fallback if table empty (first run before SQL script)
+                allCols = [
+                    { id: 'baby-care', name: 'Baby Care', icon: 'fa-baby-carriage', is_custom: false },
+                    { id: 'mother-care', name: 'Mother Care', icon: 'fa-heart', is_custom: false },
+                    { id: 'feeding', name: 'Feeding Essentials', icon: 'fa-mug-hot', is_custom: false },
+                    { id: 'skincare', name: 'Skincare', icon: 'fa-soap', is_custom: false },
+                    { id: 'diapers', name: 'Diapers & Hygiene', icon: 'fa-layer-group', is_custom: false },
+                    { id: 'gifts', name: 'Gifts', icon: 'fa-gift', is_custom: false }
+                ];
+            }
+        } else {
+            // Offline fallback
+            allCols = [
+                { id: 'baby-care', name: 'Baby Care', icon: 'fa-baby-carriage' }
+            ];
+        }
 
         // Update product dropdown
         this.updateCategoryDropdown(allCols);
 
         const html = allCols.map(col => {
             const count = this.products.filter(p => p.category === col.id).length;
+            const isCustom = col.is_custom;
+
             return `
                 <div style="background:white; padding: 20px; border-radius:12px; text-align:center; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.05); transition: transform 0.2s; position:relative;"
                      onmouseover="this.style.transform='translateY(-5px)'" 
                      onmouseout="this.style.transform='translateY(0)'"
                      onclick="if(!event.target.classList.contains('del-btn')) { admin.switchView('products'); document.querySelector('input[type=search]').value='${col.id}'; admin.filterTable('${col.id}'); }">
                     
-                    ${col.isCustom ? `<button class="del-btn" onclick="admin.deleteCollection('${col.id}')" style="position:absolute; top:5px; right:5px; border:none; background:none; color:#f00; cursor:pointer;">&times;</button>` : ''}
+                    ${isCustom ? `<button class="del-btn" onclick="admin.deleteCollection('${col.id}')" style="position:absolute; top:5px; right:5px; border:none; background:none; color:#f00; cursor:pointer;">&times;</button>` : ''}
                     
                     <i class="fa-solid ${col.icon || 'fa-folder'}" style="font-size:2.5rem; color:#FFD700; margin-bottom:15px;"></i>
                     <h3 style="margin:0; font-size:1.1rem;">${col.name}</h3>
@@ -385,27 +397,37 @@ const admin = {
         });
     },
 
-    addCollection() {
+    async addCollection() {
         const name = prompt("Enter Collection Name (e.g. 'Toys'):");
         if (name) {
             const id = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
-            const newCol = { id: id, name: name, icon: 'fa-star', isCustom: true };
 
-            const custom = JSON.parse(localStorage.getItem('kids_royal_custom_cats')) || [];
-            custom.push(newCol);
-            localStorage.setItem('kids_royal_custom_cats', JSON.stringify(custom));
+            if (supabaseClient) {
+                const { error } = await supabaseClient.from('categories').insert([{
+                    id: id,
+                    name: name,
+                    icon: 'fa-folder-open', // Default icon for custom
+                    is_custom: true
+                }]);
 
-            this.renderCollections();
-            alert("Collection Added! You can now select it when adding products.");
+                if (error) {
+                    alert("Error creating category: " + error.message);
+                } else {
+                    this.renderCollections();
+                    alert("Collection Added to Cloud Database!");
+                }
+            } else {
+                alert("Please connect Supabase to add permanent categories.");
+            }
         }
     },
 
-    deleteCollection(id) {
+    async deleteCollection(id) {
         if (confirm("Delete this collection? Products will remain but lose their category label.")) {
-            let custom = JSON.parse(localStorage.getItem('kids_royal_custom_cats')) || [];
-            custom = custom.filter(c => c.id !== id);
-            localStorage.setItem('kids_royal_custom_cats', JSON.stringify(custom));
-            this.renderCollections();
+            if (supabaseClient) {
+                await supabaseClient.from('categories').delete().eq('id', id);
+                this.renderCollections();
+            }
         }
     },
 

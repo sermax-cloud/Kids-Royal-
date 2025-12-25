@@ -5,7 +5,7 @@ const products = [
         name: "Aveeno Baby Daily Moisture Lotion",
         category: "baby-care",
         price: "GHS 120.00",
-        image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=500&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1594828198751-2475475355a2?q=80&w=500&auto=format&fit=crop",
         benefit: "Nourishes sensitive skin for 24 hours.",
         description: "Fragrance-free formula with natural colloidal oatmeal."
     },
@@ -14,7 +14,7 @@ const products = [
         name: "Johnson's Head-to-Toe Wash",
         category: "baby-care",
         price: "GHS 85.00",
-        image: "johnsons-wash.png",
+        image: "https://images.unsplash.com/photo-1555529733-0e670560f7e1?q=80&w=500&auto=format&fit=crop",
         benefit: "No more tears formula.",
         description: "Ultra-mild cleanser for delicate skin and hair."
     },
@@ -23,7 +23,7 @@ const products = [
         name: "Baby Grooming Kit",
         category: "baby-care",
         price: "GHS 65.00",
-        image: "grooming-kit.jpg",
+        image: "https://images.unsplash.com/photo-1515488042361-25f468213b6e?q=80&w=500&auto=format&fit=crop",
         benefit: "Complete set for nail and hair care.",
         description: "Includes scissors, brush, comb, and nail file."
     },
@@ -34,7 +34,7 @@ const products = [
         name: "Bio-Oil Skincare Oil",
         category: "mother-care",
         price: "GHS 150.00",
-        image: "bio-oil.png",
+        image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=500&auto=format&fit=crop",
         benefit: "Improves appearance of stretch marks.",
         description: "Specialist skincare for scars, stretch marks, and uneven skin tone."
     },
@@ -43,7 +43,7 @@ const products = [
         name: "Postpartum Recovery Belt",
         category: "mother-care",
         price: "GHS 200.00",
-        image: "postpartum-belt.png",
+        image: "https://images.unsplash.com/photo-1518449942765-bde3a26a5754?q=80&w=500&auto=format&fit=crop",
         benefit: "Support for abdominal recovery.",
         description: "Breathable, adjustable support for postpartum healing."
     },
@@ -52,7 +52,7 @@ const products = [
         name: "Nursing Pillow",
         category: "mother-care",
         price: "GHS 180.00",
-        image: "nursing-pillow.png",
+        image: "https://images.unsplash.com/photo-1629858348630-6d4329cf827c?q=80&w=500&auto=format&fit=crop",
         benefit: "Comfortable support for breastfeeding.",
         description: "Ergonomic design to reduce back and neck strain."
     },
@@ -63,7 +63,7 @@ const products = [
         name: "Philips Avent Natural Baby Bottle",
         category: "feeding",
         price: "GHS 95.00",
-        image: "philips-avent-bottle.png",
+        image: "https://plus.unsplash.com/premium_photo-1681284562547-0e6259074ed2?q=80&w=400&auto=format&fit=crop",
         benefit: "Natural latch-on for easy combination.",
         description: "Anti-colic valve designed to reduce colic and discomfort."
     },
@@ -72,7 +72,7 @@ const products = [
         name: "Silicone Baby Bibs (Set of 2)",
         category: "feeding",
         price: "GHS 55.00",
-        image: "silicone-bibs.png",
+        image: "https://images.unsplash.com/photo-1594918739194-e3c79c32df4c?q=80&w=500&auto=format&fit=crop",
         benefit: "Waterproof and easy to clean.",
         description: "Soft silicone with crumb catcher pocket."
     },
@@ -92,7 +92,7 @@ const products = [
         name: "Sudocrem Antiseptic Healing Cream",
         category: "skincare",
         price: "GHS 75.00",
-        image: "https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?q=80&w=500&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1556228392-6284f33b1297?q=80&w=500&auto=format&fit=crop",
         benefit: "Effective relief for diaper rash.",
         description: "Soothes sore skin and protects against irritants."
     },

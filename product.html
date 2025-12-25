@@ -99,7 +99,10 @@
                     <span id="p-category" class="badge">Category</span>
                     <h1 id="p-title">Product Name</h1>
                     <p id="p-benefit" class="benefit-highlight">Benefit text here</p>
-                    <h2 id="p-price" class="price-tag">GHS 0.00</h2>
+                    <div id="price-container">
+                        <h2 id="p-price" class="price-tag">GHS 0.00</h2>
+                        <!-- Original price inserted via JS if needed -->
+                    </div>
 
                     <div class="divider"></div>
 
@@ -182,6 +185,38 @@
             document.getElementById('p-title').textContent = product.name;
             document.getElementById('p-benefit').textContent = product.benefit || '';
             document.getElementById('p-price').textContent = product.price;
+
+            // Discount Logic
+            if (product.original_price) {
+                const priceContainer = document.getElementById('price-container');
+                priceContainer.style.display = 'flex';
+                priceContainer.style.alignItems = 'center';
+                priceContainer.style.gap = '15px';
+
+                // Insert Original Price
+                const oldPrice = document.createElement('span');
+                oldPrice.style.textDecoration = 'line-through';
+                oldPrice.style.color = '#999';
+                oldPrice.style.fontSize = '1.2rem';
+                oldPrice.textContent = product.original_price;
+                priceContainer.appendChild(oldPrice);
+
+                // Calculate Badge
+                try {
+                    const cleanP = parseFloat(product.price.replace(/[^\d.]/g, ''));
+                    const cleanOp = parseFloat(product.original_price.replace(/[^\d.]/g, ''));
+                    if (cleanOp > cleanP) {
+                        const off = Math.round(((cleanOp - cleanP) / cleanOp) * 100);
+                        const badge = document.createElement('span');
+                        badge.className = 'badge';
+                        badge.style.background = '#FF5252';
+                        badge.style.color = 'white';
+                        badge.textContent = `-${off}% OFF`;
+                        document.querySelector('.product-info-col').insertBefore(badge, document.getElementById('p-category'));
+                    }
+                } catch (e) { }
+            }
+
             document.getElementById('p-desc').textContent = product.description || '';
 
             // Buttons
@@ -200,17 +235,40 @@
 
             if (related.length > 0) {
                 relatedGrid.innerHTML = related.map(p => {
+                    // Calculate Discount for Related items
+                    let badgeHtml = '';
+                    let priceHtml = `<span class="prod-price">${p.price}</span>`;
+
+                    if (p.original_price) {
+                        try {
+                            const pNum = parseFloat(p.price.replace(/[^\d.]/g, ''));
+                            const opNum = parseFloat(p.original_price.replace(/[^\d.]/g, ''));
+                            if (opNum > pNum) {
+                                const pct = Math.round(((opNum - pNum) / opNum) * 100);
+                                badgeHtml = `<span class="discount-badge">-${pct}%</span>`;
+                                priceHtml = `
+                                    <div class="price-row" style="display:flex; flex-direction:column; align-items:flex-start;">
+                                        <span class="prod-price" style="color: #e63946;">${p.price}</span>
+                                        <span class="old-price" style="text-decoration:line-through; color:#999; font-size:0.85rem;">${p.original_price}</span>
+                                    </div>
+                                `;
+                            }
+                        } catch (e) { }
+                    }
+
                     // Escape quotes
                     const safeP = JSON.stringify(p).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+
                     return `
                         <div class="product-card">
+                            ${badgeHtml}
                             <div class="prod-image">
                                 <a href="product.html?id=${p.id}"><img src="${p.image}" alt="${p.name}"></a>
                             </div>
                             <div class="prod-details">
                                 <h3 class="prod-title"><a href="product.html?id=${p.id}">${p.name}</a></h3>
                                 <div style="flex-grow:1"></div>
-                                <span class="prod-price">${p.price}</span>
+                                ${priceHtml}
                                 <button class="order-btn" onclick='cart.add(${safeP})'>
                                     <i class="fa-solid fa-cart-plus"></i> Add
                                 </button>

@@ -330,6 +330,7 @@
                         class="fa-solid fa-times"></i></button>
             </div>
             <form id="collectionForm" onsubmit="admin.saveCollection(event)">
+                <input type="hidden" id="colId">
                 <div class="form-group">
                     <label>Collection Name</label>
                     <input type="text" id="colName" required placeholder="e.g. Summer Clothes">

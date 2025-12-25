@@ -387,9 +387,12 @@ const admin = {
                 <div style="background:white; padding: 20px; border-radius:12px; text-align:center; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.05); transition: transform 0.2s; position:relative;"
                      onmouseover="this.style.transform='translateY(-5px)'" 
                      onmouseout="this.style.transform='translateY(0)'"
-                     onclick="if(!event.target.classList.contains('del-btn')) { admin.switchView('products'); document.querySelector('input[type=search]').value='${col.id}'; admin.filterTable('${col.id}'); }">
+                     onclick="if(!event.target.classList.contains('action-btn-sm')) { admin.switchView('products'); document.querySelector('input[type=search]').value='${col.id}'; admin.filterTable('${col.id}'); }">
                     
-                    ${isCustom ? `<button class="del-btn" onclick="admin.deleteCollection('${col.id}')" style="position:absolute; top:5px; right:5px; border:none; background:none; color:#f00; cursor:pointer;">&times;</button>` : ''}
+                    <div style="position:absolute; top:5px; right:5px; display:flex; gap:5px;">
+                        <button class="action-btn-sm" onclick="admin.openCollectionModal('${col.id}', '${col.name}', '${col.icon}')" style="border:none; background:none; color:#aeaeae; cursor:pointer;" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                        ${isCustom ? `<button class="action-btn-sm" onclick="admin.deleteCollection('${col.id}')" style="border:none; background:none; color:#f00; cursor:pointer;" title="Delete">&times;</button>` : ''}
+                    </div>
                     
                     <i class="fa-solid ${col.icon || 'fa-folder'}" style="font-size:2.5rem; color:#FFD700; margin-bottom:15px;"></i>
                     <h3 style="margin:0; font-size:1.1rem;">${col.name}</h3>
@@ -403,36 +406,56 @@ const admin = {
         });
     },
 
-    openCollectionModal() {
-        document.getElementById('collectionForm').reset();
+    openCollectionModal(id = '', name = '', icon = '') {
+        const form = document.getElementById('collectionForm');
+        form.reset();
+
+        document.getElementById('colId').value = id;
+        if (id) {
+            document.getElementById('colName').value = name;
+            document.getElementById('colIcon').value = icon;
+            document.querySelector('#collectionModal h3').textContent = 'Edit Collection';
+            document.querySelector('#collectionModal button[type="submit"]').textContent = 'Save Changes';
+        } else {
+            document.querySelector('#collectionModal h3').textContent = 'New Collection';
+            document.querySelector('#collectionModal button[type="submit"]').textContent = 'Create Collection';
+        }
+
         document.getElementById('collectionModal').classList.add('active');
     },
 
     async saveCollection(e) {
         e.preventDefault();
+        const id = document.getElementById('colId').value;
         const name = document.getElementById('colName').value;
         const icon = document.getElementById('colIcon').value;
 
-        if (name) {
-            const id = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+        if (name && supabaseClient) {
+            let error;
 
-            if (supabaseClient) {
-                const { error } = await supabaseClient.from('categories').insert([{
-                    id: id,
+            if (id) {
+                // UPDATE existing
+                const res = await supabaseClient.from('categories').update({ name: name, icon: icon }).eq('id', id);
+                error = res.error;
+            } else {
+                // CREATE new
+                const newId = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                // Ensure unique ID (fail gracefully handled by DB usually, but good to know)
+                const res = await supabaseClient.from('categories').insert([{
+                    id: newId,
                     name: name,
                     icon: icon || 'fa-folder-open',
                     is_custom: true
                 }]);
+                error = res.error;
+            }
 
-                if (error) {
-                    alert("Error creating category: " + error.message);
-                } else {
-                    this.renderCollections();
-                    document.getElementById('collectionModal').classList.remove('active');
-                    alert("Collection Added!");
-                }
+            if (error) {
+                alert("Error: " + error.message);
             } else {
-                alert("Please connect Supabase to add permanent categories.");
+                this.renderCollections();
+                document.getElementById('collectionModal').classList.remove('active');
+                alert(id ? "Collection Updated!" : "Collection Created!");
             }
         }
     },

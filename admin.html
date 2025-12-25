@@ -203,9 +203,15 @@
                         <option value="gifts">Gifts</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Price (GHS)</label>
-                    <input type="text" id="prodPrice" placeholder="e.g. GHS 120.00" required>
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label>Original Price (Optional)</label>
+                        <input type="text" id="prodOriginalPrice" placeholder="e.g. GHS 150.00">
+                    </div>
+                    <div>
+                        <label>Sale Price</label>
+                        <input type="text" id="prodPrice" placeholder="e.g. GHS 120.00" required>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Benefit (Subtitle)</label>

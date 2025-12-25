@@ -88,6 +88,7 @@ const admin = {
             document.getElementById('prodName').value = p.name;
             document.getElementById('prodCategory').value = p.category;
             document.getElementById('prodPrice').value = p.price;
+            document.getElementById('prodOriginalPrice').value = p.original_price || '';
             document.getElementById('prodBenefit').value = p.benefit;
             document.getElementById('prodImage').value = p.image;
             document.getElementById('prodDesc').value = p.description;
@@ -116,6 +117,7 @@ const admin = {
                 name: document.getElementById('prodName').value,
                 category: document.getElementById('prodCategory').value,
                 price: document.getElementById('prodPrice').value,
+                original_price: document.getElementById('prodOriginalPrice').value,
                 benefit: document.getElementById('prodBenefit').value,
                 image: document.getElementById('prodImage').value,
                 description: document.getElementById('prodDesc').value,

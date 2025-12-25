@@ -372,7 +372,10 @@
                                         <a href="product.html?id=${product.id}">${product.name}</a>
                                     </h3>
                                     <p class="prod-benefit">${product.benefit || ''}</p>
-                                    <span class="prod-price">${product.price}</span>
+                                    <div class="price-row" style="margin-top:auto; margin-bottom:15px;">
+                                        ${product.original_price ? `<span style="text-decoration: line-through; color: #999; font-size: 0.9rem; margin-right: 8px;">${product.original_price}</span>` : ''}
+                                        <span class="prod-price">${product.price}</span>
+                                    </div>
                                     <button class="order-btn" onclick='cart.add(${safeProduct})'>
                                         <i class="fa-solid fa-cart-plus"></i> Add to Cart
                                     </button>

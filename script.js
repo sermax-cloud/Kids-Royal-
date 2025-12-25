@@ -271,8 +271,66 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof supabase !== 'undefined' || typeof window.supabaseClient !== 'undefined') {
         fetchSiteConfig();
         fetchFeaturedProducts();
+        fetchCategories(); // Fetch dynamic categories
     }
 });
+
+async function fetchCategories() {
+    try {
+        const container = document.querySelector('.categories-grid');
+        if (!container) return; // Only run on homepage if grid exists
+
+        if (!window.supabaseClient) return;
+
+        const { data, error } = await window.supabaseClient.from('categories').select('*');
+        if (error || !data || data.length === 0) return;
+
+        // Map safe IDs to local images for standard categories
+        const imageMap = {
+            'baby-care': 'baby-care.png',
+            'mother-care': 'mother-care.png',
+            'feeding': 'feeding-essentials.png',
+            'skincare': 'baby-skincare.png',
+            'diapers': 'diapers-hygiene.png',
+            'gifts': 'gifts-accessories.png'
+        };
+
+        container.innerHTML = data.map(cat => {
+            const isStandard = imageMap[cat.id];
+
+            // If standard, show Image Card
+            if (isStandard) {
+                return `
+                <a href="catalog.html?category=${cat.id}" class="category-card">
+                    <div class="cat-image-wrapper">
+                        <img src="${imageMap[cat.id]}" alt="${cat.name}">
+                    </div>
+                    <div class="cat-content">
+                        <h3>${cat.name}</h3>
+                        <p>Browse collection</p>
+                        <span class="link-arrow">Browse <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </a>`;
+            } else {
+                // If custom, show Icon Card
+                return `
+                <a href="catalog.html?category=${cat.id}" class="category-card" style="text-align: center;">
+                    <div class="cat-image-wrapper" style="background: #f0f6ff; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid ${cat.icon || 'fa-folder-open'}" style="font-size: 5rem; color: var(--primary-color);"></i>
+                    </div>
+                    <div class="cat-content">
+                        <h3>${cat.name}</h3>
+                        <p>New Collection</p>
+                        <span class="link-arrow" style="justify-content: center;">Browse <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </a>`;
+            }
+        }).join('');
+
+    } catch (e) {
+        console.warn("Category Fetch Error:", e);
+    }
+}
 
 async function fetchFeaturedProducts() {
     try {

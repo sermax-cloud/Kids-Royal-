@@ -177,7 +177,7 @@
         <div id="view-collections" class="admin-view" style="display: none;">
             <header class="header">
                 <h2>Collections</h2>
-                <button class="btn-primary" onclick="admin.addCollection()">
+                <button class="btn-primary" onclick="admin.openCollectionModal()">
                     <i class="fa-solid fa-plus"></i> New Collection
                 </button>
             </header>
@@ -315,6 +315,42 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn-primary">Publish</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Collection Modal -->
+    <div class="modal" id="collectionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>New Collection</h3>
+                <button class="action-btn"
+                    onclick="document.getElementById('collectionModal').classList.remove('active')"><i
+                        class="fa-solid fa-times"></i></button>
+            </div>
+            <form id="collectionForm" onsubmit="admin.saveCollection(event)">
+                <div class="form-group">
+                    <label>Collection Name</label>
+                    <input type="text" id="colName" required placeholder="e.g. Summer Clothes">
+                </div>
+                <div class="form-group">
+                    <label>Icon</label>
+                    <select id="colIcon">
+                        <option value="fa-folder-open">📂 Default Folder</option>
+                        <option value="fa-shirt">👕 Clothes / Fashion</option>
+                        <option value="fa-baby-carriage">🛒 Stroller / Gear</option>
+                        <option value="fa-shapes">🧩 Toys / Play</option>
+                        <option value="fa-socks">🧦 Accessories</option>
+                        <option value="fa-bowl-food">🥣 Feeding</option>
+                        <option value="fa-pump-soap">🧴 Hygiene / Lotion</option>
+                        <option value="fa-gift">🎁 Gifts</option>
+                        <option value="fa-star">⭐ Featured</option>
+                        <option value="fa-wand-magic-sparkles">✨ Special</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-primary">Create Collection</button>
                 </div>
             </form>
         </div>

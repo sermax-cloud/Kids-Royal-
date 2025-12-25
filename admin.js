@@ -403,8 +403,16 @@ const admin = {
         });
     },
 
-    async addCollection() {
-        const name = prompt("Enter Collection Name (e.g. 'Toys'):");
+    openCollectionModal() {
+        document.getElementById('collectionForm').reset();
+        document.getElementById('collectionModal').classList.add('active');
+    },
+
+    async saveCollection(e) {
+        e.preventDefault();
+        const name = document.getElementById('colName').value;
+        const icon = document.getElementById('colIcon').value;
+
         if (name) {
             const id = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
@@ -412,7 +420,7 @@ const admin = {
                 const { error } = await supabaseClient.from('categories').insert([{
                     id: id,
                     name: name,
-                    icon: 'fa-folder-open', // Default icon for custom
+                    icon: icon || 'fa-folder-open',
                     is_custom: true
                 }]);
 
@@ -420,7 +428,8 @@ const admin = {
                     alert("Error creating category: " + error.message);
                 } else {
                     this.renderCollections();
-                    alert("Collection Added to Cloud Database!");
+                    document.getElementById('collectionModal').classList.remove('active');
+                    alert("Collection Added!");
                 }
             } else {
                 alert("Please connect Supabase to add permanent categories.");

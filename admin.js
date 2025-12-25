@@ -11,6 +11,7 @@ const admin = {
         }
         // Logged in, hide overlay
         document.getElementById('login-overlay').classList.add('hidden');
+        console.log("Admin Initialized. Loading data...");
 
         // Fetch Products
         this.products = await db.getAllProducts();

@@ -268,10 +268,79 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // FETCH LIVE SITE CONFIG (Headlines/Announcements)
-    if (typeof supabase !== 'undefined') {
+    if (typeof supabase !== 'undefined' || typeof window.supabaseClient !== 'undefined') {
         fetchSiteConfig();
+        fetchFeaturedProducts();
     }
 });
+
+async function fetchFeaturedProducts() {
+    try {
+        const container = document.getElementById('featured-grid');
+        if (!container) return;
+
+        // Use the initialized client
+        if (!window.supabaseClient) return;
+
+        // Fetch products where is_featured is true
+        const { data, error } = await window.supabaseClient
+            .from('products')
+            .select('*')
+            .eq('is_featured', true)
+            .limit(4);
+
+        if (error || !data || data.length === 0) {
+            // If no features or error, hide the section
+            const section = document.getElementById('featured-products');
+            if (section) section.style.display = 'none';
+            return;
+        }
+
+        container.innerHTML = data.map(product => {
+            // Calculate Discount Badge
+            let badgeHTML = '';
+            if (product.original_price) {
+                try {
+                    const orig = parseFloat(String(product.original_price).replace(/[^0-9.]/g, ''));
+                    const curr = parseFloat(String(product.price).replace(/[^0-9.]/g, ''));
+                    if (orig > curr) {
+                        const off = Math.round(((orig - curr) / orig) * 100);
+                        badgeHTML = `<span style="position: absolute; top: 10px; left: 10px; background: #FF4D4F; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; z-index: 2;">-${off}% OFF</span>`;
+                    }
+                } catch (e) { }
+            }
+
+            return `
+            <div class="product-card fade-in-up" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <div class="prod-image" style="position: relative; height: 250px; overflow: hidden; background: #f9f9f9;">
+                    ${badgeHTML}
+                    <a href="product.html?id=${product.id}">
+                        <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    </a>
+                </div>
+                <div class="prod-details" style="padding: 20px;">
+                    <span class="prod-category" style="color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">${product.category || 'General'}</span>
+                    <h3 class="prod-title" style="font-size: 1.1rem; margin: 10px 0;">
+                        <a href="product.html?id=${product.id}" style="color: #333; text-decoration: none;">${product.name}</a>
+                    </h3>
+                    <div class="prod-bottom" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <div class="price-block">
+                             ${product.original_price ? `<span style="text-decoration: line-through; color: #aaa; font-size: 0.9rem; margin-right: 5px;">${product.original_price}</span>` : ''}
+                             <span class="price" style="font-weight: 700; color: var(--primary-color); font-size: 1.2rem;">${product.price}</span>
+                        </div>
+                        <button class="add-btn" onclick='cart.add(${JSON.stringify(product).replace(/'/g, "&#39;")})' style="background: var(--primary-color); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            `;
+        }).join('');
+
+    } catch (e) {
+        console.warn("Featured Fetch Error:", e);
+    }
+}
 
 async function fetchSiteConfig() {
     try {

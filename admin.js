@@ -3,7 +3,12 @@ const admin = {
 
     gallery: [], // Gallery Items
 
+    isInitialized: false,
+
     async init() {
+        if (this.isInitialized) return;
+        this.isInitialized = true;
+
         // Check Auth
         if (!sessionStorage.getItem('kids_royal_auth')) {
             // Not logged in, stop init (overlay is visible by default)
@@ -14,7 +19,12 @@ const admin = {
         console.log("Admin Initialized. Loading data...");
 
         // Fetch Products
-        this.products = await db.getAllProducts();
+        try {
+            this.products = await db.getAllProducts();
+        } catch (e) {
+            console.error("Failed to load products:", e);
+            this.products = [];
+        }
 
         // Fetch Gallery (Mock for now, or new table later)
         // this.gallery = await db.getAllGalleryItems(); 
@@ -39,31 +49,40 @@ const admin = {
                 alert.style.color = '#0f5132';
                 alert.style.borderRadius = '8px';
                 alert.innerHTML = '<i class="fa-solid fa-info-circle"></i> <strong>Database Connected!</strong> It looks empty. Click "Upload Defaults" to push your starter products to the cloud.';
-                header.parentNode.insertBefore(alert, header.nextSibling);
+                if (header) header.parentNode.insertBefore(alert, header.nextSibling);
             }
         } else {
             const header = document.querySelector('.header');
-            const alert = document.createElement('div');
-            alert.style.padding = '10px';
-            alert.style.marginBottom = '20px';
-            alert.style.background = '#fff3cd';
-            alert.style.borderRadius = '8px';
-            alert.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> <strong>Offline Mode:</strong> Set your Supabase URL & Key in <code>db.js</code> to go live. Changes currently save to browser only.';
-            header.parentNode.insertBefore(alert, header.nextSibling);
+            if (header) {
+                const alert = document.createElement('div');
+                alert.style.padding = '10px';
+                alert.style.marginBottom = '20px';
+                alert.style.background = '#fff3cd';
+                alert.style.borderRadius = '8px';
+                alert.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> <strong>Offline Mode:</strong> Set your Supabase URL & Key in <code>db.js</code> to go live. Changes currently save to browser only.';
+                header.parentNode.insertBefore(alert, header.nextSibling);
+            }
         }
 
         // Form Listener
-        document.getElementById('productForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.saveProduct();
-        });
+        const form = document.getElementById('productForm');
+        if (form) {
+            // Remove existing listeners to be safe (clone node trick)
+            const newForm = form.cloneNode(true);
+            form.parentNode.replaceChild(newForm, form);
+            newForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.saveProduct();
+            });
+        }
     },
 
     renderTable() {
         const tbody = document.getElementById('product-table-body');
+        if (!tbody) return;
         tbody.innerHTML = this.products.map(p => `
             <tr>
-                <td><img src="${p.image}" class="prod-img-thumb" alt="img" onerror="this.src='https://via.placeholder.com/40'"></td>
+                <td><img src="${p.image}" width="40" height="40" style="object-fit: cover; border-radius: 4px;" class="prod-img-thumb" alt="img" onerror="this.src='https://via.placeholder.com/40'"></td>
                 <td><strong>${p.name}</strong></td>
                 <td><span style="text-transform: capitalize;">${(p.category || '').replace('-', ' ')}</span></td>
                 <td>${p.price}</td>

@@ -35,15 +35,6 @@ window.db = {
                 // Try lowercase 'products' first
                 let { data, error } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
 
-                // If that fails, try Capitalized 'Products' (Common user error)
-                if (error && error.code === '42P01') { // 42P01 is "undefined_table"
-                    const res = await supabaseClient.from('Products').select('*').order('created_at', { ascending: false });
-                    data = res.data;
-                    error = res.error;
-                    // Remember the correct table name for later
-                    if (!error) this.tableName = 'Products';
-                }
-
                 if (error) {
                     console.warn("Supabase Error (Switching to local):", error);
                     return this.getLocalProducts();

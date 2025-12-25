@@ -174,6 +174,40 @@
             color: white;
             border-color: var(--primary-color);
         }
+
+        /* Discount Badge */
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            /* Right side looks premium */
+            background-color: #ff4757;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+            z-index: 10;
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+            }
+        }
     </style>
 </head>
 
@@ -359,9 +393,26 @@
                         // Note: Ideally moving away from inline onclick helps, but for now we sanitize
                         const safeProduct = JSON.stringify(product).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
 
+                        // Calculate Percent Off logic
+                        let badgeHTML = '';
+                        if (product.original_price) {
+                            try {
+                                const orig = parseFloat(String(product.original_price).replace(/[^0-9.]/g, ''));
+                                const curr = parseFloat(String(product.price).replace(/[^0-9.]/g, ''));
+                                if (orig > curr) {
+                                    const off = Math.round(((orig - curr) / orig) * 100);
+                                    if (off > 0) badgeHTML = `<span class="discount-badge">-${off}% OFF</span>`;
+                                    else badgeHTML = `<span class="discount-badge">SALE</span>`;
+                                }
+                            } catch (e) {
+                                badgeHTML = `<span class="discount-badge">SALE</span>`;
+                            }
+                        }
+
                         return `
                             <div class="product-card fade-in-up">
                                 <div class="prod-image">
+                                    ${badgeHTML}
                                     <a href="product.html?id=${product.id}">
                                         <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
                                     </a>

@@ -192,94 +192,41 @@
     <!-- Articles Section -->
     <section class="section bg-light">
         <div class="container">
-            <div class="grid-2"
+            <div id="blog-articles-container" class="grid-2"
                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px;">
-
-                <!-- Article 1: Baby Care Tips -->
-                <article class="article-card" id="baby-care">
-                    <div class="article-body">
-                        <div class="article-icon"><i class="fa-solid fa-baby"></i></div>
-                        <h2>Essential Baby Care Tips</h2>
-                        <div class="article-content">
-                            <p>Caring for your little one can be overwhelming at first. Here are some golden rules to
-                                keep them happy and healthy:</p>
-                            <ul>
-                                <li><strong>Sleep Safety:</strong> Always place your baby on their back to sleep to
-                                    reduce SIDS risk. Keep the crib free of pillows and toys.</li>
-                                <li><strong>Bathing:</strong> You don't need to bathe your newborn every day; 2-3 times
-                                    a week is enough to protect their delicate skin barrier.</li>
-                                <li><strong>Bonding:</strong> Skin-to-skin contact isn't just for the hospital. It
-                                    regulates baby's heart rate and builds a secure attachment.</li>
-                            </ul>
-                        </div>
-
-                    </div>
-                </article>
-
-                <!-- Article 2: Pregnancy Tips -->
-                <article class="article-card" id="pregnancy">
-                    <div class="article-body">
-                        <div class="article-icon"><i class="fa-solid fa-person-pregnant"></i></div>
-                        <h2>A Healthy Pregnancy Guide</h2>
-                        <div class="article-content">
-                            <p>Growing a life is hard work! Prioritize these pillars for a smoother journey:</p>
-                            <ul>
-                                <li><strong>Hydration:</strong> Drink at least 8-10 glasses of water daily. It helps
-                                    form amniotic fluid and reduces swelling.</li>
-                                <li><strong>Nutrition:</strong> Focus on iron-rich foods (spinach, lean meat) and
-                                    calcium for baby's developing bones.</li>
-                                <li><strong>Rest:</strong> Listen to your body. If you're tired, sleep. Your body is
-                                    running a marathon every single day.</li>
-                            </ul>
-                        </div>
-
-                    </div>
-                </article>
-
-                <!-- Article 3: Newborn Essentials -->
-                <article class="article-card" id="checklist">
-                    <div class="article-body">
-                        <div class="article-icon"><i class="fa-solid fa-list-check"></i></div>
-                        <h2>The Ultimate Newborn Checklist</h2>
-                        <div class="article-content">
-                            <p>Don't buy everything! Here are the absolute must-haves for the first 3 months:</p>
-                            <ul>
-                                <li><strong>Clothing:</strong> 6-10 onesies (zippers are better than buttons for night
-                                    changes!), 4-6 sleepers, and socks.</li>
-                                <li><strong>Diapering:</strong> A generous supply of newborn diapers, gentle wipes, and
-                                    a good barrier cream.</li>
-                                <li><strong>Must-Haves:</strong> A reliable digital thermometer, nasal aspirator, and
-                                    burp cloths—lots of them!</li>
-                            </ul>
-                        </div>
-
-                    </div>
-                </article>
-
-                <!-- Article 4: Mother Wellness -->
-                <article class="article-card" id="wellness">
-                    <div class="article-body">
-                        <div class="article-icon"><i class="fa-solid fa-heart-pulse"></i></div>
-                        <h2>Mother Wellness & Recovery</h2>
-                        <div class="article-content">
-                            <p>You cannot pour from an empty cup. Taking care of yourself is part of taking care of your
-                                baby.</p>
-                            <ul>
-                                <li><strong>Ask for Help:</strong> Accept meals, cleaning help, or babysitting. It takes
-                                    a village.</li>
-                                <li><strong>Postpartum Checkups:</strong> Don't skip your 6-week checkup. Discuss any
-                                    mood changes openly with your doctor.</li>
-                                <li><strong>Grace:</strong> Your body changed for 9 months to grow a human; give it time
-                                    to recover. You are doing a great job.</li>
-                            </ul>
-                        </div>
-
-                    </div>
-                </article>
-
+                <!-- Articles injected via JS -->
+                <p style="grid-column: 1/-1; text-align: center;">Loading tips...</p>
             </div>
         </div>
     </section>
+
+    <!-- Supabase & Blog Logic -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="db.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('blog-articles-container');
+            if (container && window.supabase) {
+                const { data, error } = await window.supabase.from('blog_posts').select('*').order('created_at', { ascending: false });
+
+                if (data && data.length > 0) {
+                    container.innerHTML = data.map(post => `
+                        <article class="article-card">
+                            <div class="article-body">
+                                <div class="article-icon"><i class="${post.category || 'fa-solid fa-star'}"></i></div>
+                                <h2>${post.title}</h2>
+                                <div class="article-content">
+                                    <p>${post.content ? post.content.replace(/\n/g, '<br>') : ''}</p>
+                                </div>
+                            </div>
+                        </article>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p class="text-center">No tips found. Check back later!</p>';
+                }
+            }
+        });
+    </script>
 
     <!-- Footer -->
     <footer class="footer">

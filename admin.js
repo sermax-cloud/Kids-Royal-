@@ -21,10 +21,6 @@ const admin = {
 
         this.renderTable();
         this.updateStats();
-        this.renderTable();
-        this.updateStats();
-        this.renderTable();
-        this.updateStats();
         this.renderGallery();
         this.renderCollections();
 

@@ -186,8 +186,19 @@
             document.getElementById('p-benefit').textContent = product.benefit || '';
             document.getElementById('p-price').textContent = product.price;
 
-            // Discount Logic
-            if (product.original_price) {
+            // Discount & Sold Out Logic
+            const isSoldOut = product.is_sold_out || false;
+
+            if (isSoldOut) {
+                const badge = document.createElement('span');
+                badge.className = 'badge';
+                badge.style.background = '#333';
+                badge.style.color = 'white';
+                badge.textContent = 'SOLD OUT';
+                document.querySelector('.product-info-col').insertBefore(badge, document.getElementById('p-category'));
+
+                document.getElementById('p-image').style.filter = 'grayscale(100%)';
+            } else if (product.original_price) {
                 const priceContainer = document.getElementById('price-container');
                 priceContainer.style.display = 'flex';
                 priceContainer.style.alignItems = 'center';
@@ -219,14 +230,30 @@
 
             document.getElementById('p-desc').textContent = product.description || '';
 
-            // Buttons
-            const waMsg = `Hello KIDS ROYAL, I am interested in buying: ${product.name} (${product.price})`;
-            document.getElementById('whatsapp-order-btn').href = `https://wa.me/233242943446?text=${encodeURIComponent(waMsg)}`;
+            // Buttons Logic
+            const cartBtn = document.getElementById('add-to-cart-btn');
+            const waBtn = document.getElementById('whatsapp-order-btn');
 
-            // Add to Cart Logic
-            document.getElementById('add-to-cart-btn').onclick = () => {
-                cart.add(product);
-            };
+            if (isSoldOut) {
+                cartBtn.disabled = true;
+                cartBtn.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Out of Stock';
+                cartBtn.style.background = '#ccc';
+                cartBtn.style.cursor = 'not-allowed';
+                cartBtn.onclick = null;
+
+                waBtn.classList.add('disabled-link'); // Helper class or just style inline
+                waBtn.style.pointerEvents = 'none';
+                waBtn.style.background = '#eee';
+                waBtn.style.color = '#999';
+                waBtn.innerHTML = 'Unavailable';
+            } else {
+                const waMsg = `Hello KIDS ROYAL, I am interested in buying: ${product.name} (${product.price})`;
+                waBtn.href = `https://wa.me/233242943446?text=${encodeURIComponent(waMsg)}`;
+
+                cartBtn.onclick = () => {
+                    cart.add(product);
+                };
+            }
 
             // Related Products (Same category, exclude current)
             const allProducts = await db.getAllProducts();

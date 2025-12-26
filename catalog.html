@@ -411,9 +411,14 @@
                         // Note: Ideally moving away from inline onclick helps, but for now we sanitize
                         const safeProduct = JSON.stringify(product).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
 
+                        // Sold Out Logic
+                        let isSoldOut = product.is_sold_out || false;
+
                         // Calculate Percent Off logic
                         let badgeHTML = '';
-                        if (product.original_price) {
+                        if (isSoldOut) {
+                            badgeHTML = `<span class="discount-badge" style="background:#333; box-shadow:none;">SOLD OUT</span>`;
+                        } else if (product.original_price) {
                             try {
                                 const orig = parseFloat(String(product.original_price).replace(/[^0-9.]/g, ''));
                                 const curr = parseFloat(String(product.price).replace(/[^0-9.]/g, ''));
@@ -427,12 +432,26 @@
                             }
                         }
 
+                        // Button State
+                        let btnHtml = '';
+                        if (isSoldOut) {
+                            btnHtml = `
+                            <button class="order-btn" disabled style="background:#ccc; cursor:not-allowed;">
+                                <i class="fa-solid fa-circle-xmark"></i> Out of Stock
+                            </button>`;
+                        } else {
+                            btnHtml = `
+                            <button class="order-btn" onclick='cart.add(${safeProduct})'>
+                                <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                            </button>`;
+                        }
+
                         return `
-                            <div class="product-card fade-in-up">
+                            <div class="product-card fade-in-up" ${isSoldOut ? 'style="opacity:0.8;"' : ''}>
                                 <div class="prod-image">
                                     ${badgeHTML}
                                     <a href="product.html?id=${product.id}">
-                                        <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
+                                        <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300?text=No+Image'" style="${isSoldOut ? 'filter:grayscale(100%);' : ''}">
                                     </a>
                                 </div>
                                 <div class="prod-details">
@@ -445,9 +464,7 @@
                                         ${product.original_price ? `<span style="text-decoration: line-through; color: #999; font-size: 0.9rem; margin-right: 8px;">${product.original_price}</span>` : ''}
                                         <span class="prod-price">${product.price}</span>
                                     </div>
-                                    <button class="order-btn" onclick='cart.add(${safeProduct})'>
-                                        <i class="fa-solid fa-cart-plus"></i> Add to Cart
-                                    </button>
+                                    ${btnHtml}
                                 </div>
                             </div>
                         `;

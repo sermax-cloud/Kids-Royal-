@@ -109,6 +109,7 @@ const admin = {
             document.getElementById('prodBenefit').value = p.benefit;
             document.getElementById('prodImage').value = p.image;
             document.getElementById('prodDesc').value = p.description;
+            document.getElementById('prodSoldOut').checked = p.is_sold_out || false;
         } else {
             form.reset();
             document.getElementById('prodId').value = '';
@@ -142,6 +143,7 @@ const admin = {
                 image: document.getElementById('prodImage').value,
                 description: document.getElementById('prodDesc').value,
                 is_featured: existing ? existing.is_featured : false, // Preserve Featured State
+                is_sold_out: document.getElementById('prodSoldOut').checked,
                 created_at: new Date().toISOString()
             };
 

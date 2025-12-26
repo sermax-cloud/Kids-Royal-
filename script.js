@@ -291,7 +291,10 @@ async function fetchCategories() {
         if (error || !data) return;
 
         // 3. Update Cache & UI
-        localStorage.setItem('kids_royal_cache_categories', JSON.stringify(data));
+        const freshId = JSON.stringify(data);
+        if (cached && freshId === cached) return; // No change, no re-render
+
+        localStorage.setItem('kids_royal_cache_categories', freshId);
         renderCategories(data, container);
 
     } catch (e) {
@@ -360,7 +363,10 @@ async function fetchFeaturedProducts() {
         if (error || !data) return;
 
         // 3. Update Cache & UI
-        localStorage.setItem('kids_royal_cache_featured', JSON.stringify(data));
+        const freshId = JSON.stringify(data);
+        if (cached && freshId === cached) return; // No change, no re-render (Stop Jitter)
+
+        localStorage.setItem('kids_royal_cache_featured', freshId);
         renderFeatured(data, container);
 
     } catch (e) {
@@ -427,7 +433,10 @@ async function fetchSiteConfig() {
         // 2. Fetch Fresh
         const { data, error } = await window.supabaseClient.from('site_config').select('*');
         if (data && data.length > 0) {
-            localStorage.setItem('kids_royal_cache_config', JSON.stringify(data));
+            const freshId = JSON.stringify(data);
+            if (cached && freshId === cached) return; // No change
+
+            localStorage.setItem('kids_royal_cache_config', freshId);
             applySiteConfig(data);
         }
     } catch (e) {

@@ -71,7 +71,8 @@ const admin = {
     renderTable() {
         const tbody = document.getElementById('product-table-body');
         if (!tbody) return;
-        tbody.innerHTML = this.products.map(p => `
+
+        const html = this.products.map(p => `
             <tr>
                 <td><img src="${p.image}" width="40" height="40" style="object-fit: cover; border-radius: 4px;" class="prod-img-thumb" alt="img" onerror="this.src='https://via.placeholder.com/40'"></td>
                 <td><strong>${p.name}</strong></td>
@@ -88,6 +89,11 @@ const admin = {
                 </td>
             </tr>
         `).join('');
+
+        // Anti-Flicker Check
+        if (tbody.innerHTML === html) return;
+
+        tbody.innerHTML = html;
     },
 
     updateStats() {

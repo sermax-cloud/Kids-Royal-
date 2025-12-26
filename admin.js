@@ -412,7 +412,7 @@ const admin = {
                 <div style="background:white; padding: 20px; border-radius:12px; text-align:center; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.05); transition: transform 0.2s; position:relative;"
                      onmouseover="this.style.transform='translateY(-5px)'" 
                      onmouseout="this.style.transform='translateY(0)'"
-                     onclick="if(!event.target.classList.contains('action-btn-sm')) { admin.switchView('products'); document.querySelector('input[type=search]').value='${col.id}'; admin.filterTable('${col.id}'); }">
+                     onclick="if(!event.target.classList.contains('action-btn-sm')) { admin.previewCollection('${col.id}', '${col.name}'); }">
                     
                     <div style="position:absolute; top:5px; right:5px; display:flex; gap:5px;">
                         <button class="action-btn-sm" onclick="event.stopPropagation(); admin.openCollectionModal('${col.id}', '${col.name}', '${col.icon}')" style="border:none; background:none; color:#aeaeae; cursor:pointer;" title="Edit"><i class="fa-solid fa-pen"></i></button>
@@ -429,6 +429,41 @@ const admin = {
         grids.forEach(grid => {
             if (grid) grid.innerHTML = html;
         });
+    },
+
+    previewCollection(id, name) {
+        const previewDiv = document.getElementById('collection-products-preview');
+        const title = document.getElementById('preview-col-title');
+        const tbody = document.getElementById('preview-table-body');
+
+        if (!previewDiv || !tbody) return;
+
+        title.textContent = `Products in "${name}"`;
+
+        // Filter Items
+        const items = this.products.filter(p => p.category === id);
+
+        if (items.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:#666;">No products found in this collection.</td></tr>';
+        } else {
+            tbody.innerHTML = items.map(p => `
+                <tr>
+                    <td>
+                        <div style="width:40px; height:40px; background:#f0f0f0; border-radius:4px; overflow:hidden;">
+                             <img src="${p.image}" width="40" height="40" style="object-fit:cover; width:100%; height:100%;" onerror="this.style.display='none'">
+                        </div>
+                    </td>
+                    <td><strong>${p.name}</strong></td>
+                    <td>${p.price}</td>
+                    <td>
+                        <button class="action-btn edit" onclick="admin.editProduct('${p.id}'); admin.switchView('products');"><i class="fa-solid fa-pen"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        previewDiv.style.display = 'block';
+        previewDiv.scrollIntoView({ behavior: 'smooth' });
     },
 
     openCollectionModal(id = '', name = '', icon = '') {

@@ -185,6 +185,26 @@
                 style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
                 <!-- Auto-Generated from Products -->
             </div>
+
+            <div id="collection-products-preview"
+                style="margin-top: 40px; display: none; background: white; padding: 20px; border-radius: 12px; border: 1px solid #eee;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 id="preview-col-title" style="margin: 0;">Products in Collection</h3>
+                    <button class="btn-secondary"
+                        onclick="document.getElementById('collection-products-preview').style.display='none'">Close</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="preview-table-body"></tbody>
+                </table>
+            </div>
         </div>
 
         <!-- ORDERS VIEW (Placeholder) -->

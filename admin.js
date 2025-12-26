@@ -72,9 +72,31 @@ const admin = {
         const tbody = document.getElementById('product-table-body');
         if (!tbody) return;
 
-        const html = this.products.map(p => `
+        // Anti-Flicker: Checksum based on data, not HTML string (faster & more robust)
+        const checksum = JSON.stringify(this.products.map(p => ({
+            id: p.id,
+            name: p.name,
+            cat: p.category,
+            price: p.price,
+            feat: p.is_featured,
+            img: p.image
+        })));
+
+        if (tbody.getAttribute('data-checksum') === checksum) return;
+        tbody.setAttribute('data-checksum', checksum);
+
+        tbody.innerHTML = this.products.map(p => `
             <tr>
-                <td><img src="${p.image}" width="40" height="40" style="object-fit: cover; border-radius: 4px;" class="prod-img-thumb" alt="img" onerror="this.src='https://via.placeholder.com/40'"></td>
+                <td>
+                    <div style="width:40px; height:40px; background:#f0f0f0; border-radius:4px; overflow:hidden;">
+                        <img src="${p.image}" 
+                             width="40" height="40" 
+                             style="width:100%; height:100%; object-fit: cover; display:block;" 
+                             alt="img" 
+                             loading="lazy"
+                             onerror="this.onerror=null; this.parentNode.style.backgroundColor='#ddd'; this.style.display='none';">
+                    </div>
+                </td>
                 <td><strong>${p.name}</strong></td>
                 <td><span style="text-transform: capitalize;">${(p.category || '').replace('-', ' ')}</span></td>
                 <td>${p.price}</td>
@@ -89,11 +111,6 @@ const admin = {
                 </td>
             </tr>
         `).join('');
-
-        // Anti-Flicker Check
-        if (tbody.innerHTML === html) return;
-
-        tbody.innerHTML = html;
     },
 
     updateStats() {

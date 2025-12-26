@@ -278,58 +278,65 @@ document.addEventListener('DOMContentLoaded', () => {
 async function fetchCategories() {
     try {
         const container = document.querySelector('.categories-grid');
-        if (!container) return; // Only run on homepage if grid exists
+        if (!container) return;
+
+        // 1. Try Cache First
+        const cached = localStorage.getItem('kids_royal_cache_categories');
+        if (cached) renderCategories(JSON.parse(cached), container);
 
         if (!window.supabaseClient) return;
 
+        // 2. Fetch Fresh
         const { data, error } = await window.supabaseClient.from('categories').select('*');
-        if (error || !data || data.length === 0) return;
+        if (error || !data) return;
 
-        // Map safe IDs to local images for standard categories
-        const imageMap = {
-            'baby-care': 'baby-care.png',
-            'mother-care': 'mother-care.png',
-            'feeding': 'feeding-essentials.png',
-            'skincare': 'baby-skincare.png',
-            'diapers': 'diapers-hygiene.png',
-            'gifts': 'gifts-accessories.png'
-        };
-
-        container.innerHTML = data.map(cat => {
-            const isStandard = imageMap[cat.id];
-
-            // If standard, show Image Card
-            if (isStandard) {
-                return `
-                <a href="catalog.html?category=${cat.id}" class="category-card">
-                    <div class="cat-image-wrapper">
-                        <img src="${imageMap[cat.id]}" alt="${cat.name}">
-                    </div>
-                    <div class="cat-content">
-                        <h3>${cat.name}</h3>
-                        <p>Browse collection</p>
-                        <span class="link-arrow">Browse <i class="fa-solid fa-arrow-right"></i></span>
-                    </div>
-                </a>`;
-            } else {
-                // If custom, show Icon Card
-                return `
-                <a href="catalog.html?category=${cat.id}" class="category-card" style="text-align: center;">
-                    <div class="cat-image-wrapper" style="background: #f0f6ff; display: flex; align-items: center; justify-content: center;">
-                        <i class="fa-solid ${cat.icon || 'fa-folder-open'}" style="font-size: 5rem; color: var(--primary-color);"></i>
-                    </div>
-                    <div class="cat-content">
-                        <h3>${cat.name}</h3>
-                        <p>New Collection</p>
-                        <span class="link-arrow" style="justify-content: center;">Browse <i class="fa-solid fa-arrow-right"></i></span>
-                    </div>
-                </a>`;
-            }
-        }).join('');
+        // 3. Update Cache & UI
+        localStorage.setItem('kids_royal_cache_categories', JSON.stringify(data));
+        renderCategories(data, container);
 
     } catch (e) {
         console.warn("Category Fetch Error:", e);
     }
+}
+
+function renderCategories(data, container) {
+    const imageMap = {
+        'baby-care': 'baby-care.png',
+        'mother-care': 'mother-care.png',
+        'feeding': 'feeding-essentials.png',
+        'skincare': 'baby-skincare.png',
+        'diapers': 'diapers-hygiene.png',
+        'gifts': 'gifts-accessories.png'
+    };
+
+    container.innerHTML = data.map(cat => {
+        const isStandard = imageMap[cat.id];
+        if (isStandard) {
+            return `
+            <a href="catalog.html?category=${cat.id}" class="category-card">
+                <div class="cat-image-wrapper">
+                    <img src="${imageMap[cat.id]}" alt="${cat.name}" loading="lazy">
+                </div>
+                <div class="cat-content">
+                    <h3>${cat.name}</h3>
+                    <p>Browse collection</p>
+                    <span class="link-arrow">Browse <i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+            </a>`;
+        } else {
+            return `
+            <a href="catalog.html?category=${cat.id}" class="category-card" style="text-align: center;">
+                <div class="cat-image-wrapper" style="background: #f0f6ff; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid ${cat.icon || 'fa-folder-open'}" style="font-size: 5rem; color: var(--primary-color);"></i>
+                </div>
+                <div class="cat-content">
+                    <h3>${cat.name}</h3>
+                    <p>New Collection</p>
+                    <span class="link-arrow" style="justify-content: center;">Browse <i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+            </a>`;
+        }
+    }).join('');
 }
 
 async function fetchFeaturedProducts() {
@@ -337,116 +344,126 @@ async function fetchFeaturedProducts() {
         const container = document.getElementById('featured-grid');
         if (!container) return;
 
-        // Use the initialized client
+        // 1. Try Cache
+        const cached = localStorage.getItem('kids_royal_cache_featured');
+        if (cached) renderFeatured(JSON.parse(cached), container);
+
         if (!window.supabaseClient) return;
 
-        // Fetch products where is_featured is true
+        // 2. Fetch Fresh
         const { data, error } = await window.supabaseClient
             .from('products')
             .select('*')
             .eq('is_featured', true)
             .limit(4);
 
-        if (error || !data || data.length === 0) {
-            // If no features or error, hide the section
-            const section = document.getElementById('featured-products');
-            if (section) section.style.display = 'none';
-            return;
-        }
+        if (error || !data) return;
 
-        container.innerHTML = data.map(product => {
-            // Calculate Discount Badge
-            let badgeHTML = '';
-            if (product.original_price) {
-                try {
-                    const orig = parseFloat(String(product.original_price).replace(/[^0-9.]/g, ''));
-                    const curr = parseFloat(String(product.price).replace(/[^0-9.]/g, ''));
-                    if (orig > curr) {
-                        const off = Math.round(((orig - curr) / orig) * 100);
-                        badgeHTML = `<span style="position: absolute; top: 10px; left: 10px; background: #FF4D4F; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; z-index: 2;">-${off}% OFF</span>`;
-                    }
-                } catch (e) { }
-            }
-
-            return `
-            <div class="product-card fade-in-up" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-                <div class="prod-image" style="position: relative; height: 250px; overflow: hidden; background: #f9f9f9;">
-                    ${badgeHTML}
-                    <a href="product.html?id=${product.id}">
-                        <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                    </a>
-                </div>
-                <div class="prod-details" style="padding: 20px;">
-                    <span class="prod-category" style="color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">${product.category || 'General'}</span>
-                    <h3 class="prod-title" style="font-size: 1.1rem; margin: 10px 0;">
-                        <a href="product.html?id=${product.id}" style="color: #333; text-decoration: none;">${product.name}</a>
-                    </h3>
-                    <div class="prod-bottom" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                        <div class="price-block">
-                             ${product.original_price ? `<span style="text-decoration: line-through; color: #aaa; font-size: 0.9rem; margin-right: 5px;">${product.original_price}</span>` : ''}
-                             <span class="price" style="font-weight: 700; color: var(--primary-color); font-size: 1.2rem;">${product.price}</span>
-                        </div>
-                        <button class="add-btn" onclick='cart.add(${JSON.stringify(product).replace(/'/g, "&#39;")})' style="background: var(--primary-color); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            `;
-        }).join('');
+        // 3. Update Cache & UI
+        localStorage.setItem('kids_royal_cache_featured', JSON.stringify(data));
+        renderFeatured(data, container);
 
     } catch (e) {
         console.warn("Featured Fetch Error:", e);
     }
 }
 
+function renderFeatured(data, container) {
+    if (data.length === 0) {
+        const section = document.getElementById('featured-products');
+        if (section) section.style.display = 'none';
+        return;
+    }
+
+    container.innerHTML = data.map(product => {
+        let badgeHTML = '';
+        if (product.original_price) {
+            try {
+                const orig = parseFloat(String(product.original_price).replace(/[^0-9.]/g, ''));
+                const curr = parseFloat(String(product.price).replace(/[^0-9.]/g, ''));
+                if (orig > curr) {
+                    const off = Math.round(((orig - curr) / orig) * 100);
+                    badgeHTML = `<span style="position: absolute; top: 10px; left: 10px; background: #FF4D4F; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; z-index: 2;">-${off}% OFF</span>`;
+                }
+            } catch (e) { }
+        }
+
+        return `
+        <div class="product-card fade-in-up" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <div class="prod-image" style="position: relative; height: 250px; overflow: hidden; background: #f9f9f9;">
+                ${badgeHTML}
+                <a href="product.html?id=${product.id}">
+                    <img src="${product.image}" loading="lazy" alt="${product.name}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </a>
+            </div>
+            <div class="prod-details" style="padding: 20px;">
+                <span class="prod-category" style="color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">${product.category || 'General'}</span>
+                <h3 class="prod-title" style="font-size: 1.1rem; margin: 10px 0;">
+                    <a href="product.html?id=${product.id}" style="color: #333; text-decoration: none;">${product.name}</a>
+                </h3>
+                <div class="prod-bottom" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                    <div class="price-block">
+                            ${product.original_price ? `<span style="text-decoration: line-through; color: #aaa; font-size: 0.9rem; margin-right: 5px;">${product.original_price}</span>` : ''}
+                            <span class="price" style="font-weight: 700; color: var(--primary-color); font-size: 1.2rem;">${product.price}</span>
+                    </div>
+                    <button class="add-btn" onclick='cart.add(${JSON.stringify(product).replace(/'/g, "&#39;")})' style="background: var(--primary-color); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
 async function fetchSiteConfig() {
     try {
-        // Use the initialized client, not the library
+        // 1. Try Cache
+        const cached = localStorage.getItem('kids_royal_cache_config');
+        if (cached) applySiteConfig(JSON.parse(cached));
+
         if (!window.supabaseClient) return;
 
-        const { data, error } = await window.supabaseClient
-            .from('site_config')
-            .select('*');
-
+        // 2. Fetch Fresh
+        const { data, error } = await window.supabaseClient.from('site_config').select('*');
         if (data && data.length > 0) {
-            const config = {};
-            data.forEach(item => config[item.key] = item.value);
-
-            // Update Headlines
-            const titleEl = document.querySelector('.hero-text h1');
-            const subEl = document.querySelector('.hero-text p.lead-text');
-
-            if (config.hero_headline && titleEl) {
-                // Keep the span logic if possible, or just replace text
-                // Simple replacement to be safe:
-                titleEl.innerHTML = config.hero_headline.replace(/\n/g, '<br>');
-            }
-            if (config.hero_sub && subEl) {
-                subEl.textContent = config.hero_sub;
-            }
-
-            // Announcement Bar
-            if (config.announcement) {
-                const nav = document.querySelector('.navbar');
-                // Avoid duplicates
-                if (!document.querySelector('.announcement-bar')) {
-                    const bar = document.createElement('div');
-                    bar.className = 'announcement-bar';
-                    bar.style.background = '#000';
-                    bar.style.color = 'white';
-                    bar.style.textAlign = 'center';
-                    bar.style.padding = '8px';
-                    bar.style.fontSize = '0.9rem';
-                    bar.style.fontWeight = '500';
-                    bar.innerHTML = config.announcement;
-
-                    // Prepend to body or before nav
-                    document.body.insertBefore(bar, document.body.firstChild);
-                }
-            }
+            localStorage.setItem('kids_royal_cache_config', JSON.stringify(data));
+            applySiteConfig(data);
         }
     } catch (e) {
-        console.warn("Could not load dynamic config:", e);
+        console.warn("Config Fetch Error:", e);
+    }
+}
+
+function applySiteConfig(data) {
+    const config = {};
+    data.forEach(item => config[item.key] = item.value);
+
+    // Update Headlines
+    const titleEl = document.querySelector('.hero-text h1');
+    const subEl = document.querySelector('.hero-text p.lead-text');
+
+    if (config.hero_headline && titleEl) {
+        titleEl.innerHTML = config.hero_headline.replace(/\n/g, '<br>');
+    }
+    if (config.hero_sub && subEl) {
+        subEl.textContent = config.hero_sub;
+    }
+
+    // Announcement Bar
+    if (config.announcement) {
+        // Avoid duplicates
+        if (!document.querySelector('.announcement-bar')) {
+            const bar = document.createElement('div');
+            bar.className = 'announcement-bar';
+            bar.style.background = '#000';
+            bar.style.color = 'white';
+            bar.style.textAlign = 'center';
+            bar.style.padding = '8px';
+            bar.style.fontSize = '0.9rem';
+            bar.style.fontWeight = '500';
+            bar.innerHTML = config.announcement;
+            document.body.insertBefore(bar, document.body.firstChild);
+        }
     }
 }

@@ -16,6 +16,15 @@ BEGIN
 END
 $$;
 
+-- Add 'is_sold_out' column if not exists
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'products' AND column_name = 'is_sold_out') THEN
+        ALTER TABLE products ADD COLUMN is_sold_out boolean DEFAULT false;
+    END IF;
+END
+$$;
+
 -- Clear existing data to avoid duplicates/conflicts before re-seeding
 DELETE FROM products;
 

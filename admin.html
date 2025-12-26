@@ -32,7 +32,13 @@
     </div>
 
     <!-- Sidebar -->
-    <nav class="sidebar">
+    <nav class="sidebar" id="adminSidebar">
+        <!-- Close Button for Mobile -->
+        <button class="close-sidebar-btn" onclick="toggleSidebar()"
+            style="display:none; position:absolute; top:15px; right:15px; background:none; border:none; color:white; font-size:1.5rem;">
+            <i class="fa-solid fa-times"></i>
+        </button>
+
         <div class="brand" style="display: flex; justify-content: center; padding: 20px 0;">
             <div
                 style="background: white; padding: 12px 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
@@ -63,6 +69,11 @@
 
     <!-- Main Content -->
     <main class="main-content">
+        <!-- Mobile Toggle -->
+        <button class="mobile-toggle-btn" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
         <!-- DASHBOARD / PRODUCTS VIEW -->
         <!-- DASHBOARD VIEW -->

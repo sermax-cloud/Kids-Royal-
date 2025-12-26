@@ -672,3 +672,11 @@ const admin = {
 document.addEventListener('DOMContentLoaded', () => {
     admin.init();
 });
+
+// Mobile Sidebar Logic
+function toggleSidebar() {
+    document.getElementById('adminSidebar').classList.toggle('active');
+    const overlay = document.querySelector('.sidebar-overlay');
+    if (overlay) overlay.classList.toggle('active');
+}
+window.toggleSidebar = toggleSidebar;  // Expose to window

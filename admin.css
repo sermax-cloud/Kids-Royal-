@@ -30,6 +30,8 @@ body {
     display: flex;
     flex-direction: column;
     padding: 20px;
+    transition: transform 0.3s ease;
+    z-index: 101;
 }
 
 .brand {
@@ -44,6 +46,11 @@ body {
 
 .brand i {
     color: var(--accent-color);
+}
+
+.menu {
+    padding: 0;
+    margin: 0;
 }
 
 .menu li {
@@ -87,6 +94,7 @@ body {
     flex: 1;
     overflow-y: auto;
     padding: 30px;
+    padding-top: 20px;
 }
 
 .header {
@@ -236,6 +244,9 @@ body {
     border-radius: var(--border-radius);
     width: 500px;
     max-width: 90%;
+    max-height: 90vh;
+    /* Scroll if too tall on mobile */
+    overflow-y: auto;
 }
 
 .modal-header {
@@ -263,6 +274,8 @@ body {
     border: 1px solid #ddd;
     border-radius: 8px;
     font-family: inherit;
+    box-sizing: border-box;
+    /* Prevent padding overflow */
 }
 
 .modal-footer {
@@ -280,6 +293,7 @@ body {
     border: none;
     cursor: pointer;
 }
+
 /* Login Overlay */
 .login-overlay {
     position: fixed;
@@ -300,7 +314,7 @@ body {
     border-radius: 20px;
     width: 350px;
     text-align: center;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
 }
 
 .login-card h2 {
@@ -321,6 +335,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
+    box-sizing: border-box;
 }
 
 .login-card button {
@@ -332,3 +347,90 @@ body {
     display: none !important;
 }
 
+/* --- MOBILE RESPONSIVENESS --- */
+.mobile-toggle-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--primary-dark);
+    margin-bottom: 15px;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        /* Hide offscreen */
+        top: 0;
+        height: 100%;
+        width: 250px;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    .mobile-toggle-btn {
+        display: block;
+    }
+
+    .close-sidebar-btn {
+        display: block !important;
+    }
+
+    .main-content {
+        padding: 15px;
+        padding-top: 15px;
+    }
+
+    /* Make Tables Scrollable */
+    .data-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Stack Header Items */
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        /* Stack stats */
+    }
+
+    .modal-content {
+        padding: 20px;
+        width: 100%;
+        border-radius: 12px 12px 0 0;
+        position: absolute;
+        bottom: 0;
+        max-height: 85vh;
+    }
+
+    .modal {
+        align-items: flex-end;
+        /* Sheet style on mobile */
+    }
+}

@@ -500,13 +500,21 @@ const admin = {
         select.innerHTML = cols.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
     },
 
-    // Quick filter helper (optional, if search input exists)
+    // Quick filter helper
     filterTable(term) {
-        // Simple client-side filter for demo purposes
+        const lower = term.toLowerCase();
         const rows = document.querySelectorAll('#product-table-body tr');
-        rows.forEach(row => {
+
+        rows.forEach((row, index) => {
+            // We access the source data to allow filtering by hidden ID fields (like category slugs)
+            const product = this.products[index];
+            if (!product) return; // robustness
+
             const text = row.innerText.toLowerCase();
-            row.style.display = text.includes(term.toLowerCase()) ? '' : 'none';
+            // Check formatted text OR exact category ID (handling the hyphen issue)
+            const isMatch = text.includes(lower) || product.category === term;
+
+            row.style.display = isMatch ? '' : 'none';
         });
     },
 

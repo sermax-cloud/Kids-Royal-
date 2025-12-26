@@ -284,12 +284,7 @@
             <!-- Category Pills for quick switching -->
             <div class="category-filters" id="category-filters">
                 <a href="catalog.html?category=all" class="cat-pill" id="filter-all">All</a>
-                <a href="catalog.html?category=baby-care" class="cat-pill" id="filter-baby-care">Baby Care</a>
-                <a href="catalog.html?category=mother-care" class="cat-pill" id="filter-mother-care">Mother Care</a>
-                <a href="catalog.html?category=feeding" class="cat-pill" id="filter-feeding">Feeding</a>
-                <a href="catalog.html?category=skincare" class="cat-pill" id="filter-skincare">Skincare</a>
-                <a href="catalog.html?category=diapers" class="cat-pill" id="filter-diapers">Diapers</a>
-                <a href="catalog.html?category=gifts" class="cat-pill" id="filter-gifts">Gifts</a>
+                <!-- Dynamic filters injected here -->
             </div>
         </div>
     </div>
@@ -351,15 +346,38 @@
             const grid = document.getElementById('product-grid');
             const pageTitle = document.getElementById('page-title');
             const crumbName = document.getElementById('current-cat-name');
+            const filterContainer = document.getElementById('category-filters');
 
-            // Highlight active filter
-            const validCategories = ['all', 'baby-care', 'mother-care', 'feeding', 'skincare', 'diapers', 'gifts'];
-            const safeCategory = validCategories.includes(category) ? category : 'all';
-            document.getElementById(`filter-${safeCategory}`).classList.add('active');
+            // 1. Fetch Categories for Filters
+            if (window.supabaseClient) {
+                const { data: categories } = await window.supabaseClient.from('categories').select('*');
+                if (categories) {
+                    // Clear existing (except 'All') or append. 
+                    // Best way: Rebuild list starting with All.
+                    const allLink = `<a href="catalog.html?category=all" class="cat-pill ${category === 'all' ? 'active' : ''}" id="filter-all">All</a>`;
+
+                    const catLinks = categories.map(cat => {
+                        return `<a href="catalog.html?category=${cat.id}" class="cat-pill ${category === cat.id ? 'active' : ''}">${cat.name}</a>`;
+                    }).join('');
+
+                    filterContainer.innerHTML = allLink + catLinks;
+                }
+            }
+
+            // 2. Determine Safe Category (Allow any ID now)
+            // If category is not 'all', we trust the URL parameter.
+            const safeCategory = category;
+
+            // Highlight active if not already handled by dynamic render (fallback for offline)
+            if (!window.supabaseClient) {
+                const el = document.getElementById(`filter-${safeCategory}`);
+                if (el) el.classList.add('active');
+            }
 
             // Format category name for display
             const formatName = (cat) => {
                 if (cat === 'all') return 'All Products';
+                // Try to find name from fetched categories if possible, else prettify ID
                 return cat.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
             };
 

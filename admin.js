@@ -118,9 +118,17 @@ const admin = {
         document.getElementById('active-products').textContent = this.products.length;
     },
 
+    // Gallery State
+    currentGallery: [],
+
     openModal(id = null) {
         const modal = document.getElementById('productModal');
         const form = document.getElementById('productForm');
+        const galleryPreview = document.getElementById('prod-gallery-preview');
+
+        // Reset Gallery State
+        this.currentGallery = [];
+        galleryPreview.innerHTML = '';
 
         if (id) {
             const p = this.products.find(x => x.id === id);
@@ -133,6 +141,12 @@ const admin = {
             document.getElementById('prodImage').value = p.image;
             document.getElementById('prodDesc').value = p.description;
             document.getElementById('prodSoldOut').checked = p.is_sold_out || false;
+
+            // Load Gallery
+            if (p.gallery && Array.isArray(p.gallery)) {
+                this.currentGallery = [...p.gallery];
+                this.renderGalleryPreview();
+            }
         } else {
             form.reset();
             document.getElementById('prodId').value = '';
@@ -143,6 +157,55 @@ const admin = {
 
     closeModal() {
         document.getElementById('productModal').classList.remove('active');
+        this.currentGallery = []; // Clear memory
+    },
+
+    // --- GALLERY HELPERS ---
+    renderGalleryPreview() {
+        const preview = document.getElementById('prod-gallery-preview');
+        if (!preview) return;
+
+        preview.innerHTML = this.currentGallery.map((url, index) => `
+            <div style="position:relative; width:60px; height:60px; background:#eee; border-radius:4px;">
+                <img src="${url}" style="width:100%; height:100%; object-fit:cover; border-radius:4px;" alt="thumb">
+                <button type="button" onclick="admin.removeGalleryItem(${index})" 
+                    style="position:absolute; top:-5px; right:-5px; background:#ff4d4f; color:white; border:none; border-radius:50%; width:18px; height:18px; font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
+            </div>
+        `).join('');
+    },
+
+    removeGalleryItem(index) {
+        this.currentGallery.splice(index, 1);
+        this.renderGalleryPreview();
+    },
+
+    async handleGalleryUpload(input) {
+        const files = Array.from(input.files);
+        if (files.length === 0) return;
+
+        // Show loading info
+        const btn = input.nextElementSibling; // The button
+        const span = btn.nextElementSibling; // The span
+        const oldText = span.textContent;
+        span.textContent = "Compressing & Uploading...";
+
+        try {
+            for (const file of files) {
+                // db.uploadImage now handles compression automatically
+                const url = await db.uploadImage(file);
+                if (url) {
+                    this.currentGallery.push(url);
+                    // Update preview immediately for feedback
+                    this.renderGalleryPreview();
+                }
+            }
+        } catch (e) {
+            console.error("Gallery Upload Error:", e);
+            alert("Some images failed to upload.");
+        } finally {
+            input.value = ''; // Reset input
+            span.textContent = oldText;
+        }
     },
 
     async saveProduct() {
@@ -167,6 +230,7 @@ const admin = {
                 description: document.getElementById('prodDesc').value,
                 is_featured: existing ? existing.is_featured : false, // Preserve Featured State
                 is_sold_out: document.getElementById('prodSoldOut').checked,
+                gallery: this.currentGallery, // Save Gallery
                 created_at: new Date().toISOString()
             };
 

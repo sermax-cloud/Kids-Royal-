@@ -298,12 +298,29 @@
                     <input type="text" id="prodBenefit">
                 </div>
                 <div class="form-group">
-                    <label>Image</label>
+                    <label>Main Image</label>
                     <div style="display: flex; gap: 10px;">
                         <input type="text" id="prodImage" placeholder="URL will appear here..." required>
                         <button type="button" class="btn-secondary" onclick="admin.triggerUpload('product')">
                             <i class="fa-solid fa-upload"></i> Upload
                         </button>
+                    </div>
+                </div>
+
+                <!-- Gallery Section -->
+                <div class="form-group">
+                    <label>Additional Images (Gallery)</label>
+                    <div style="margin-bottom: 10px;">
+                        <input type="file" id="gallery-upload-input" multiple style="display: none;"
+                            onchange="admin.handleGalleryUpload(this)">
+                        <button type="button" class="btn-secondary"
+                            onclick="document.getElementById('gallery-upload-input').click()">
+                            <i class="fa-solid fa-images"></i> Add Images
+                        </button>
+                        <span style="font-size: 0.8rem; color: #666; margin-left: 10px;">(Auto-compressed)</span>
+                    </div>
+                    <div id="prod-gallery-preview" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <!-- Gallery Thumbs -->
                     </div>
                 </div>
                 <div class="form-group">

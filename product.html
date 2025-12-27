@@ -93,7 +93,15 @@
 
             <div class="product-wrapper">
                 <div class="product-image-col">
-                    <img id="p-image" src="" alt="Product Image" class="fade-in-up">
+                    <div style="border-radius: 12px; overflow: hidden; background: #fff;">
+                        <img id="p-image" src="" alt="Product Image" class="fade-in-up"
+                            style="width: 100%; height: auto; display: block; cursor: zoom-in;"
+                            onclick="window.open(this.src, '_blank')">
+                    </div>
+                    <div id="p-gallery"
+                        style="display: none; gap: 10px; margin-top: 15px; overflow-x: auto; padding-bottom: 5px;">
+                        <!-- Thumbs injected via JS -->
+                    </div>
                 </div>
                 <div class="product-info-col fade-in-up delay-1">
                     <span id="p-category" class="badge">Category</span>
@@ -185,6 +193,22 @@
             document.getElementById('p-title').textContent = product.name;
             document.getElementById('p-benefit').textContent = product.benefit || '';
             document.getElementById('p-price').textContent = product.price;
+
+            // Gallery Logic
+            const galleryDiv = document.getElementById('p-gallery');
+            if (product.gallery && product.gallery.length > 0) {
+                // Combine main image + gallery for display
+                const allImages = [product.image, ...product.gallery];
+
+                galleryDiv.innerHTML = allImages.map((url, i) => `
+                    <div style="flex: 0 0 80px; height: 80px; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid #eee;"
+                         onclick="document.getElementById('p-image').src='${url}';">
+                        <img src="${url}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                `).join('');
+
+                galleryDiv.style.display = 'flex';
+            }
 
             // Discount & Sold Out Logic
             const isSoldOut = product.is_sold_out || false;

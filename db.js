@@ -156,6 +156,54 @@ window.db = {
     },
 
     // --- STORAGE (Images) ---
+    // --- STORAGE (Images) ---
+    async compressImage(file, maxWidth = 1000, quality = 0.7) {
+        // Skip if not an image
+        if (!file.type.startsWith('image/')) return file;
+
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    // Calculate new dimensions
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth) {
+                        height = Math.round(height * (maxWidth / width));
+                        width = maxWidth;
+                    }
+
+                    // Create Canvas
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Compress
+                    canvas.toBlob((blob) => {
+                        if (!blob) {
+                            resolve(file); // Fallback to original
+                            return;
+                        }
+                        const optimizedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                            type: 'image/jpeg',
+                            lastModified: Date.now()
+                        });
+                        console.log(`Compressed: ${(file.size / 1024).toFixed(2)}KB -> ${(optimizedFile.size / 1024).toFixed(2)}KB`);
+                        resolve(optimizedFile);
+                    }, 'image/jpeg', quality);
+                };
+                img.onerror = () => resolve(file); // Fallback
+            };
+            reader.onerror = () => resolve(file); // Fallback
+        });
+    },
+
     async uploadImage(file) {
         if (!supabaseClient) {
             alert("Cloud database not connected. Cannot upload files.");
@@ -163,10 +211,13 @@ window.db = {
         }
 
         try {
-            const fileName = 'uploads/' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+            // Compress first
+            const fileToUpload = await this.compressImage(file);
+
+            const fileName = 'uploads/' + Date.now() + '_' + fileToUpload.name.replace(/[^a-zA-Z0-9.]/g, '_');
 
             // 1. Upload
-            const { data, error } = await supabaseClient.storage.from('images').upload(fileName, file);
+            const { data, error } = await supabaseClient.storage.from('images').upload(fileName, fileToUpload);
 
             if (error) {
                 if (error.message.includes('Bucket not found')) {
@@ -174,7 +225,8 @@ window.db = {
                 } else {
                     alert("Upload Failed: " + error.message);
                 }
-                throw error;
+                console.error(error);
+                return null;
             }
 
             // 2. Get Public URL

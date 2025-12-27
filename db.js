@@ -62,19 +62,11 @@ window.db = {
 
                 let results = data || [];
 
-                console.log(`[DB] Fetched ${results.length} total products.`);
-                console.log(`[DB] Filtering for category: '${category}'`);
-
-                // Debug available categories
-                const availableCats = [...new Set(results.map(p => p.category))];
-                console.log(`[DB] Available Categories in DB:`, availableCats);
-
                 // Filter (Client-side to ensure robustness)
                 if (category && category !== 'all') {
                     results = results.filter(p => (p.category || '').toLowerCase() === category.toLowerCase());
                 }
 
-                console.log(`[DB] Returning ${results.length} items.`);
                 return results;
             }
         } catch (err) {

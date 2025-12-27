@@ -55,7 +55,7 @@ window.db = {
                 // Fetch ALL (Lightweight) - Filter in JS for safety/speed balance
                 let { data, error } = await supabaseClient
                     .from('products')
-                    .select('id, name, price, original_price, image, category, is_sold_out, is_featured')
+                    .select('*')
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;

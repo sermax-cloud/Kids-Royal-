@@ -48,6 +48,27 @@ window.db = {
         return this.getLocalProducts();
     },
 
+    // OPTIMIZED: Lightweight fetch for Catalog/Home (No descriptions/galleries)
+    async getProductsGrid() {
+        try {
+            if (supabaseClient) {
+                let { data, error } = await supabaseClient
+                    .from('products')
+                    .select('id, name, price, original_price, image, category, is_sold_out, is_featured')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    // Fallback or retry
+                    return this.getLocalProducts();
+                }
+                return data || [];
+            }
+        } catch (err) {
+            return this.getLocalProducts();
+        }
+        return this.getLocalProducts();
+    },
+
     tableName: 'products', // Default
 
     async getProductById(id) {

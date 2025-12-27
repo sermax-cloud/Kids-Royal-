@@ -356,7 +356,7 @@ async function fetchFeaturedProducts() {
         // 2. Fetch Fresh
         const { data, error } = await window.supabaseClient
             .from('products')
-            .select('*')
+            .select('id, name, price, original_price, image, category, is_sold_out')
             .eq('is_featured', true)
             .limit(4);
 

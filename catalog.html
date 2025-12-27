@@ -389,7 +389,7 @@
 
             // Fetch and render
             try {
-                let allProducts = await db.getAllProducts();
+                let allProducts = await db.getProductsGrid();
 
                 // Filter
                 let items = allProducts || [];
@@ -465,7 +465,7 @@
                                 <div class="prod-image">
                                     ${badgeHTML}
                                     <a href="product.html?id=${product.id}">
-                                        <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300?text=No+Image'" style="${isSoldOut ? 'filter:grayscale(100%);' : ''}">
+                                        <img src="${product.image}" loading="lazy" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300?text=No+Image'" style="${isSoldOut ? 'filter:grayscale(100%);' : ''}">
                                     </a>
                                 </div>
                                 <div class="prod-details">

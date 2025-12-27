@@ -391,16 +391,7 @@
             try {
                 let items = await db.getProductsGrid(safeCategory);
 
-                // Anti-Flicker: Check if data changed
-                const cacheKey = `kids_royal_catalog_${safeCategory}`;
-                const cached = localStorage.getItem(cacheKey);
-                const freshDataStart = JSON.stringify(items);
-
-                // If we have content and it matches cache, don't re-render (prevents flicker)
-                if (grid.innerHTML && cached === freshDataStart) {
-                    // console.log('Skipping render, data identical');
-                    return;
-                }
+                // (Cache check removed to fix loading state bug)
 
                 // Update Cache
                 localStorage.setItem(cacheKey, freshDataStart);

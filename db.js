@@ -48,23 +48,32 @@ window.db = {
         return this.getLocalProducts();
     },
 
-    // OPTIMIZED: Lightweight fetch for Catalog/Home (No descriptions/galleries)
-    async getProductsGrid() {
+    // OPTIMIZED: Lightweight fetch with SERVER-SIDE Filtering
+    async getProductsGrid(category = 'all') {
         try {
             if (supabaseClient) {
-                let { data, error } = await supabaseClient
+                let query = supabaseClient
                     .from('products')
                     .select('id, name, price, original_price, image, category, is_sold_out, is_featured')
                     .order('created_at', { ascending: false });
 
-                if (error) {
-                    // Fallback or retry
-                    return this.getLocalProducts();
+                // Server-Side Filter: Only fetch what we need
+                if (category && category !== 'all') {
+                    query = query.eq('category', category);
                 }
+
+                let { data, error } = await query;
+
+                if (error) throw error; // Trigger catch block for fallback
                 return data || [];
             }
         } catch (err) {
-            return this.getLocalProducts();
+            // Offline/Error Fallback
+            let local = this.getLocalProducts();
+            if (category && category !== 'all') {
+                local = local.filter(p => p.category === category);
+            }
+            return local;
         }
         return this.getLocalProducts();
     },

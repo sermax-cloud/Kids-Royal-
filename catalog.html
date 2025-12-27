@@ -389,13 +389,7 @@
 
             // Fetch and render
             try {
-                let allProducts = await db.getProductsGrid();
-
-                // Filter
-                let items = allProducts || [];
-                if (safeCategory !== 'all') {
-                    items = items.filter(p => p.category === safeCategory);
-                }
+                let items = await db.getProductsGrid(safeCategory);
 
                 // Anti-Flicker: Check if data changed
                 const cacheKey = `kids_royal_catalog_${safeCategory}`;

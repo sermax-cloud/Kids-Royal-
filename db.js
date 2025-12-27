@@ -75,6 +75,7 @@ window.db = {
                 }
 
                 console.log(`[DB] Returning ${results.length} items.`);
+                return results;
             }
         } catch (err) {
             // Offline/Error Fallback

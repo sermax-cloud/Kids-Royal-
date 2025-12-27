@@ -71,7 +71,7 @@ window.db = {
 
                 // Filter (Client-side to ensure robustness)
                 if (category && category !== 'all') {
-                    results = results.filter(p => p.category === category);
+                    results = results.filter(p => (p.category || '').toLowerCase() === category.toLowerCase());
                 }
 
                 console.log(`[DB] Returning ${results.length} items.`);

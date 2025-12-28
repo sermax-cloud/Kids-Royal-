@@ -1226,8 +1226,8 @@ img {
 /* --- PRODUCT CARD STYLES (Global) --- */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
 }
 
 .product-card {
@@ -1248,7 +1248,7 @@ img {
 }
 
 .prod-image {
-    height: 200px;
+    height: 180px;
     overflow: hidden;
     position: relative;
     background: #fdfdfd;
@@ -1281,7 +1281,7 @@ img {
 }
 
 .prod-title {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     margin-bottom: 5px;
     font-weight: 700;
     line-height: 1.3;

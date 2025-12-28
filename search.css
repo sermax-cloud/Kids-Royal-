@@ -51,8 +51,6 @@
     height: 40px;
     /* Adjust based on logo aspect ratio */
     width: auto;
-    filter: brightness(0) invert(1);
-    /* Make logo white if it's black, remove if using colored logo */
 }
 
 /* Search Area (Center) */

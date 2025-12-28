@@ -18,6 +18,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -128,6 +129,13 @@
                 <li><a href="index.html#categories">Shop</a></li>
                 <li><a href="#" class="active">Tips & Advice</a></li>
             </ul>
+            <!-- Desktop Search -->
+            <div class="nav-search">
+                <form action="catalog.html" method="GET">
+                    <input type="text" name="search" placeholder="Search products..." required>
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+            </div>
             <a href="https://wa.me/233242943446" class="btn btn-primary nav-btn" target="_blank">
                 <i class="fa-brands fa-whatsapp"></i> Chat Now
             </a>
@@ -146,6 +154,15 @@
             <span class="logo"><img src="logo.png" alt="KIDS ROYAL"></span>
             <button class="close-menu"><i class="fa-solid fa-times"></i></button>
         </div>
+
+        <!-- Mobile Search -->
+        <div class="mobile-search">
+            <form action="catalog.html" method="GET">
+                <input type="text" name="search" placeholder="Search products..." required>
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+        </div>
+
         <ul class="mobile-nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="index.html#categories">Shop Essentials</a></li>
@@ -275,6 +292,7 @@
     </a>
 
     <script src="script.js"></script>
+    <script src="search.js"></script>
 </body>
 
 </html>

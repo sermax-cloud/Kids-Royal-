@@ -23,6 +23,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -36,6 +37,13 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="catalog.html?category=all">Shop All</a></li>
             </ul>
+            <!-- Desktop Search -->
+            <div class="nav-search">
+                <form action="catalog.html" method="GET">
+                    <input type="text" name="search" placeholder="Search products..." required>
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+            </div>
             <!-- Cart Trigger -->
             <div class="nav-cart-trigger cart-trigger" style="cursor: pointer; position: relative;">
                 <i class="fa-solid fa-shopping-basket" style="font-size: 1.2rem; color: var(--text-dark);"></i>
@@ -56,6 +64,14 @@
         <div class="mobile-menu-header">
             <span class="logo"><img src="logo.png" alt="KIDS ROYAL"></span>
             <button class="close-menu"><i class="fa-solid fa-times"></i></button>
+        </div>
+
+        <!-- Mobile Search -->
+        <div class="mobile-search">
+            <form action="catalog.html" method="GET">
+                <input type="text" name="search" placeholder="Search products..." required>
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
         </div>
         <ul class="mobile-nav-links">
             <li><a href="index.html">Home</a></li>
@@ -170,6 +186,7 @@
     <script src="products.js"></script>
     <script src="db.js"></script>
     <script src="script.js"></script>
+    <script src="search.js"></script>
     <script>
         // Use inline script for page-specific logic to keep script.js clean
         document.addEventListener('DOMContentLoaded', async () => {

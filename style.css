@@ -1221,6 +1221,54 @@ img {
         height: 100%;
         object-fit: cover;
     }
+
+    /* Mobile Grid Refinements */
+    .product-grid,
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        /* Force 2 columns */
+        gap: 12px !important;
+    }
+
+    .prod-image {
+        height: 150px;
+    }
+
+    .cat-image-wrapper {
+        height: 100px;
+    }
+
+    .prod-details,
+    .cat-content {
+        padding: 10px;
+    }
+
+    .prod-title {
+        font-size: 0.9rem;
+        line-height: 1.3;
+        margin-bottom: 5px;
+    }
+
+    .cat-content h3 {
+        font-size: 1rem;
+        margin-bottom: 5px;
+    }
+
+    .prod-price {
+        font-size: 1rem;
+    }
+
+    .prod-benefit,
+    .cat-content p {
+        font-size: 0.75rem;
+        margin-bottom: 8px;
+        line-height: 1.2;
+    }
+
+    .order-btn {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
 }
 
 /* --- PRODUCT CARD STYLES (Global) --- */

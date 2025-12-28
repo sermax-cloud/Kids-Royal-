@@ -41,10 +41,8 @@
     padding: 5px 10px;
     border: 1px solid transparent;
     border-radius: 4px;
-}
-
-.header-logo:hover {
-    border-color: rgba(255, 255, 255, 0.6);
+    background: white;
+    margin-right: 10px;
 }
 
 .header-logo img {

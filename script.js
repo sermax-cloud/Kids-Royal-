@@ -19,6 +19,7 @@ setTimeout(() => {
 
 // Mobile Menu Toggle
 const hamburger = document.querySelector('.hamburger');
+const navHamburger = document.querySelector('.nav-hamburger');
 const mobileMenu = document.querySelector('.mobile-menu');
 const overlay = document.querySelector('.mobile-menu-overlay');
 const closeBtn = document.querySelector('.close-menu');
@@ -32,6 +33,13 @@ function toggleMenu() {
 
 if (hamburger) {
     hamburger.addEventListener('click', toggleMenu);
+}
+
+if (navHamburger) {
+    navHamburger.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent # jump
+        toggleMenu();
+    });
 }
 
 if (closeBtn) {

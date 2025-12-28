@@ -54,41 +54,72 @@
 <body>
 
     <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="index.html" class="logo"><img src="logo.png" alt="KIDS ROYAL"></a>
-            <ul class="nav-links">
-                <li><a href="#how-it-works">How to Order</a></li>
-                <li><a href="#categories">Categories</a></li>
-                <li><a href="blog.html">Tips & Advice</a></li>
-                <li><a href="#why-choose">Why Us</a></li>
-                <!-- Socials in Nav (Desktop) -->
-                <li class="nav-socials">
-                    <a href="https://www.instagram.com/kidsroyalgh?igsh=ZWt4dGN1bmoxemFz" target="_blank"><i
-                            class="fa-brands fa-instagram"></i></a>
-                    <a href="https://www.facebook.com/people/Kids-Royal-gh/100054543395696/" target="_blank"><i
-                            class="fa-brands fa-facebook"></i></a>
-                    <a href="https://www.tiktok.com/@kids.royal?_r=1&_t=ZM-92aqzsrslXo" target="_blank"><i
-                            class="fa-brands fa-tiktok"></i></a>
-                </li>
-            </ul>
-            <!-- Desktop Search -->
-            <div class="nav-search">
-                <form action="catalog.html" method="GET">
-                    <input type="text" name="search" placeholder="Search products..." required>
-                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                </form>
-            </div>
-            <a href="https://wa.me/233242943446" class="btn btn-primary nav-btn" target="_blank">
-                <i class="fa-brands fa-whatsapp"></i> Chat Now
-            </a>
-            <div class="hamburger">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
+    <!-- Amazon-Style Header -->
+    <header class="site-header">
+        <!-- Top Row: Logo, Search, Actions -->
+        <div class="header-main">
+            <div class="container header-grid">
+                <!-- Logo -->
+                <a href="index.html" class="header-logo">
+                    <img src="logo.png" alt="KIDS ROYAL">
+                </a>
+
+                <!-- Search Bar (Center) -->
+                <div class="header-search">
+                    <form action="catalog.html" method="GET">
+                        <input type="text" name="search" placeholder="Search for baby essentials..." required>
+                        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form>
+                </div>
+
+                <!-- Right Actions -->
+                <div class="header-actions">
+                    <!-- Chat -->
+                    <a href="https://wa.me/233242943446" target="_blank" class="action-item">
+                        <span class="action-text action-sm">Need help?</span>
+                        <span class="action-lg"><i class="fa-brands fa-whatsapp"></i> Chat</span>
+                    </a>
+
+                    <!-- CartTrigger -->
+                    <div class="action-item cart-trigger">
+                        <div class="cart-action">
+                            <div class="cart-icon-wrapper">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span class="header-cart-count cart-count">0</span>
+                            </div>
+                            <span class="action-text">
+                                <span class="action-sm">My</span>
+                                <span class="action-lg">Cart</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
+
+        <!-- Bottom Row: Navigation Links -->
+        <nav class="header-nav">
+            <div class="nav-row-container">
+                <a href="#" class="nav-item nav-hamburger">
+                    <i class="fa-solid fa-bars"></i> All
+                </a>
+                <a href="index.html" class="nav-item">Home</a>
+                <a href="catalog.html" class="nav-item">Shop All</a>
+                <a href="catalog.html?category=baby-care" class="nav-item">Baby Care</a>
+                <a href="catalog.html?category=mother-care" class="nav-item">Mother Care</a>
+                <a href="blog.html" class="nav-item">Tips & Advice</a>
+                <a href="#why-choose" class="nav-item">Why Us</a>
+
+                <div style="flex-grow:1"></div>
+
+                <!-- Socials (Right side of black strip) -->
+                <a href="https://www.instagram.com/kidsroyalgh?igsh=ZWt4dGN1bmoxemFz" target="_blank"
+                    class="nav-item"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/people/Kids-Royal-gh/100054543395696/" target="_blank"
+                    class="nav-item"><i class="fa-brands fa-facebook"></i></a>
+            </div>
+        </nav>
+    </header>
 
     <!-- Mobile Menu Overlay -->
     <div class="mobile-menu-overlay"></div>

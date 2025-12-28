@@ -449,9 +449,9 @@ img {
 /* Categories */
 .categories-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     /* Responsive Grid */
-    gap: 15px;
+    gap: 30px;
 }
 
 .category-card {
@@ -464,7 +464,7 @@ img {
 }
 
 .cat-image-wrapper {
-    height: 160px;
+    height: 220px;
     /* Fixed height for consistency */
     overflow: hidden;
 }
@@ -481,7 +481,7 @@ img {
 }
 
 .cat-content {
-    padding: 15px;
+    padding: 25px;
 }
 
 .cat-content h3 {
@@ -1221,61 +1221,13 @@ img {
         height: 100%;
         object-fit: cover;
     }
-
-    /* Mobile Grid Refinements */
-    .product-grid,
-    .categories-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        /* Force 2 columns */
-        gap: 12px !important;
-    }
-
-    .prod-image {
-        height: 170px;
-    }
-
-    .cat-image-wrapper {
-        height: 140px;
-    }
-
-    .prod-details,
-    .cat-content {
-        padding: 10px;
-    }
-
-    .prod-title {
-        font-size: 0.9rem;
-        line-height: 1.3;
-        margin-bottom: 5px;
-    }
-
-    .cat-content h3 {
-        font-size: 1rem;
-        margin-bottom: 5px;
-    }
-
-    .prod-price {
-        font-size: 1rem;
-    }
-
-    .prod-benefit,
-    .cat-content p {
-        font-size: 0.75rem;
-        margin-bottom: 8px;
-        line-height: 1.2;
-    }
-
-    .order-btn {
-        padding: 8px 10px;
-        font-size: 0.85rem;
-    }
 }
 
 /* --- PRODUCT CARD STYLES (Global) --- */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
 }
 
 .product-card {
@@ -1296,7 +1248,7 @@ img {
 }
 
 .prod-image {
-    height: 180px;
+    height: 200px;
     overflow: hidden;
     position: relative;
     background: #fdfdfd;
@@ -1314,7 +1266,7 @@ img {
 }
 
 .prod-details {
-    padding: 15px;
+    padding: 20px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -1329,7 +1281,7 @@ img {
 }
 
 .prod-title {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     margin-bottom: 5px;
     font-weight: 700;
     line-height: 1.3;

@@ -144,6 +144,26 @@ img {
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.03);
 }
 
+.nav-socials {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    border-left: 2px solid #f0f0f0;
+    padding-left: 20px;
+    margin-left: 10px;
+}
+
+.nav-socials a {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    transition: all 0.2s ease;
+}
+
+.nav-socials a:hover {
+    transform: translateY(-2px);
+    color: var(--primary-dark);
+}
+
 .nav-container {
     display: flex;
     justify-content: space-between;

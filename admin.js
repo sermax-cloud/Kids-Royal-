@@ -4,18 +4,45 @@ const admin = {
     gallery: [], // Gallery Items
 
     isInitialized: false,
+    inactivityTimeout: null,
+
+    setupInactivityTimer() {
+        // 15 Minutes Inactivity Timeout
+        const TIMEOUT_DURATION = 15 * 60 * 1000;
+
+        const resetTimer = () => {
+            if (this.inactivityTimeout) clearTimeout(this.inactivityTimeout);
+
+            this.inactivityTimeout = setTimeout(() => {
+                alert("Session expired due to inactivity.");
+                this.logout();
+            }, TIMEOUT_DURATION);
+        };
+
+        // Reset on activity
+        window.addEventListener('mousemove', resetTimer);
+        window.addEventListener('keypress', resetTimer);
+        window.addEventListener('click', resetTimer);
+        window.addEventListener('scroll', resetTimer);
+        window.addEventListener('touchstart', resetTimer);
+
+        resetTimer(); // Start
+    },
 
     async init() {
         if (this.isInitialized) return;
-        this.isInitialized = true;
 
         // Check Auth
         if (!sessionStorage.getItem('kids_royal_auth')) {
             // Not logged in, stop init (overlay is visible by default)
             return;
         }
+
+        this.isInitialized = true;
+
         // Logged in, hide overlay
         document.getElementById('login-overlay').classList.add('hidden');
+        this.setupInactivityTimer();
         console.log("Admin Initialized. Loading data...");
 
         document.getElementById('product-table-body').innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary-color);"></i></td></tr>';

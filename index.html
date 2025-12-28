@@ -47,8 +47,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- Font Awesome for Icons (using CDN for simplicity in this generated file) -->
+    <link rel="stylesheet" href="search.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -73,6 +72,13 @@
                             class="fa-brands fa-tiktok"></i></a>
                 </li>
             </ul>
+            <!-- Desktop Search -->
+            <div class="nav-search">
+                <form action="catalog.html" method="GET">
+                    <input type="text" name="search" placeholder="Search products..." required>
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+            </div>
             <a href="https://wa.me/233242943446" class="btn btn-primary nav-btn" target="_blank">
                 <i class="fa-brands fa-whatsapp"></i> Chat Now
             </a>
@@ -91,6 +97,15 @@
             <span class="logo"><img src="logo.png" alt="KIDS ROYAL"></span>
             <button class="close-menu"><i class="fa-solid fa-times"></i></button>
         </div>
+
+        <!-- Mobile Search -->
+        <div class="mobile-search">
+            <form action="catalog.html" method="GET">
+                <input type="text" name="search" placeholder="Search products..." required>
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+        </div>
+
         <ul class="mobile-nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="#how-it-works">How to Order</a></li>

@@ -348,6 +348,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const params = new URLSearchParams(window.location.search);
             const category = params.get('category') || 'all';
+            const searchQuery = params.get('search');
 
             const grid = document.getElementById('product-grid');
             const pageTitle = document.getElementById('page-title');
@@ -360,53 +361,75 @@
                 if (categories) {
                     // Clear existing (except 'All') or append. 
                     // Best way: Rebuild list starting with All.
-                    const allLink = `<a href="catalog.html?category=all" class="cat-pill ${category === 'all' ? 'active' : ''}" id="filter-all">All</a>`;
+                    const allLink = `<a href="catalog.html?category=all" class="cat-pill ${category === 'all' && !searchQuery ? 'active' : ''}" id="filter-all">All</a>`;
 
                     const catLinks = categories.map(cat => {
-                        return `<a href="catalog.html?category=${cat.id}" class="cat-pill ${category === cat.id ? 'active' : ''}">${cat.name}</a>`;
+                        return `<a href="catalog.html?category=${cat.id}" class="cat-pill ${category === cat.id && !searchQuery ? 'active' : ''}">${cat.name}</a>`;
                     }).join('');
 
                     filterContainer.innerHTML = allLink + catLinks;
                 }
             }
 
-            // 2. Determine Safe Category (Allow any ID now)
-            // If category is not 'all', we trust the URL parameter.
-            const safeCategory = category;
-
-            // Highlight active if not already handled by dynamic render (fallback for offline)
-            if (!window.supabaseClient) {
-                const el = document.getElementById(`filter-${safeCategory}`);
-                if (el) el.classList.add('active');
+            // Highlight Active Filter (fallback/static logic)
+            if (!searchQuery) {
+                const activePill = document.getElementById(`filter-${category}`) || document.getElementById('filter-all');
+                if (activePill) {
+                    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+                    activePill.classList.add('active');
+                }
+            } else {
+                document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
             }
 
-            // Format category name for display
-            const formatName = (cat) => {
-                if (cat === 'all') return 'All Products';
-                // Try to find name from fetched categories if possible, else prettify ID
-                return cat.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-            };
+            // Helper
+            const formatName = (str) => {
+                if (!str) return '';
+                return str.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            }
 
-            pageTitle.textContent = formatName(safeCategory);
-            crumbName.textContent = formatName(safeCategory);
+            // Set Title
+            if (searchQuery) {
+                pageTitle.textContent = `Results for "${searchQuery}"`;
+                crumbName.textContent = `Search: ${searchQuery}`;
+            } else if (category !== 'all') {
+                pageTitle.textContent = formatName(category);
+                crumbName.textContent = formatName(category);
+            } else {
+                pageTitle.textContent = 'All Products';
+                crumbName.textContent = 'All Products';
+            }
 
-            // Show Loading State
-            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i><p>Loading products...</p></div>';
+            if (!grid) return;
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center;"><p>Loading products...</p></div>';
 
-            // Fetch and render
             try {
-                let items = await db.getProductsGrid(safeCategory);
-
-                // (Cache check removed to fix loading state bug)
-
-                // (Cache update removed)
+                let items = [];
+                if (window.db) {
+                    if (searchQuery) {
+                        // Fetch ALL for search filtering
+                        items = await window.db.getProductsGrid('all');
+                        const q = searchQuery.toLowerCase().trim();
+                        if (q) {
+                            items = items.filter(p =>
+                                (p.name || '').toLowerCase().includes(q) ||
+                                (p.description || '').toLowerCase().includes(q) ||
+                                (p.category || '').toLowerCase().includes(q)
+                            );
+                        }
+                    } else {
+                        items = await window.db.getProductsGrid(category);
+                    }
+                }
 
                 if (items.length === 0) {
+                    const msg = searchQuery ? `No results for "${searchQuery}"` : "No products found.";
                     grid.innerHTML = `
                         <div class="empty-state">
                             <i class="fa-regular fa-folder-open"></i>
-                            <h3>No products found in this category yet.</h3>
-                            <p>Check back soon or browse other categories.</p>
+                            <h3>${msg}</h3>
+                            <p>Try different keywords or browse categories.</p>
+                            ${searchQuery ? '<a href="catalog.html" class="btn btn-primary" style="margin-top:15px; display:inline-block; border-radius:30px; padding:10px 20px;">Clear Search</a>' : ''}
                         </div>
                     `;
                 } else {

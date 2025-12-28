@@ -449,9 +449,9 @@ img {
 /* Categories */
 .categories-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     /* Responsive Grid */
-    gap: 30px;
+    gap: 20px;
 }
 
 .category-card {
@@ -464,7 +464,7 @@ img {
 }
 
 .cat-image-wrapper {
-    height: 220px;
+    height: 160px;
     /* Fixed height for consistency */
     overflow: hidden;
 }
@@ -481,7 +481,7 @@ img {
 }
 
 .cat-content {
-    padding: 25px;
+    padding: 15px;
 }
 
 .cat-content h3 {

@@ -7,6 +7,12 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <title>Product Details - KIDS ROYAL</title>
     <meta name="description" content="KIDS ROYAL - Trusted mother & baby comfort.">
+    <!-- Open Graph (Dynamics) -->
+    <meta property="og:title" content="Product Details - KIDS ROYAL">
+    <meta property="og:description" content="Shop premium baby essentials.">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="product">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -185,6 +191,35 @@
             // Populate Data
             document.title = `${product.name} - KIDS ROYAL`;
             document.querySelector('meta[name="description"]').setAttribute("content", product.description || '');
+
+            // dynamic SEO: OG Tags & JSON-LD
+            document.querySelector('meta[property="og:title"]').setAttribute("content", product.name);
+            document.querySelector('meta[property="og:description"]').setAttribute("content", product.description || product.benefit);
+            document.querySelector('meta[property="og:image"]').setAttribute("content", product.image);
+            document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
+
+            // Inject JSON-LD
+            const schemaScript = document.createElement('script');
+            schemaScript.type = 'application/ld+json';
+            schemaScript.text = JSON.stringify({
+                "@context": "https://schema.org/",
+                "@type": "Product",
+                "name": product.name,
+                "image": product.image,
+                "description": product.description || product.benefit,
+                "brand": {
+                    "@type": "Brand",
+                    "name": "KIDS ROYAL"
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "url": window.location.href,
+                    "priceCurrency": "GHS",
+                    "price": product.price.replace(/[^\d.]/g, ''),
+                    "availability": product.is_sold_out ? "https://schema.org/OutOfStock" : "https://schema.org/InStock"
+                }
+            });
+            document.head.appendChild(schemaScript);
 
             document.getElementById('cur-prod-name').textContent = product.name;
             document.getElementById('p-image').src = product.image;

@@ -1325,3 +1325,47 @@ img {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
 }
+
+/* Responsive Product Grid for Mobile - Pairs (2 columns) */
+@media (max-width: 600px) {
+
+    .product-grid,
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+
+    .product-card {
+        height: auto;
+        /* Allow flexible height */
+    }
+
+    .prod-image {
+        height: 150px !important;
+        /* Smaller image height for mobile */
+    }
+
+    .prod-details {
+        padding: 12px !important;
+    }
+
+    .prod-title {
+        font-size: 1rem !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .prod-category {
+        font-size: 0.7rem !important;
+    }
+
+    .prod-price {
+        font-size: 1.1rem !important;
+    }
+
+    .order-btn {
+        padding: 8px !important;
+        font-size: 0.85rem !important;
+    }
+}

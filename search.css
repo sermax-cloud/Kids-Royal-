@@ -188,50 +188,71 @@
 
 /* --- BOTTOM ROW (.header-nav) --- */
 .header-nav {
-    background-color: var(--primary-dark);
-    /* Slightly darker/different shade */
-    padding: 0;
-    /* Tight fit */
-    height: 39px;
+    background-color: #233e76;
+    /* Slightly deeper navy for contrast */
+    height: 42px;
+    /* Slightly taller for better touch targets */
     display: flex;
     align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-row-container {
     display: flex;
     align-items: center;
     height: 100%;
-    width: 90%;
-    max-width: 1200px;
+    width: 95%;
+    /* Use more width */
+    max-width: 1300px;
     margin: 0 auto;
-    padding: 0 15px;
-    gap: 5px;
+    padding: 0 10px;
+    gap: 8px;
+    /* More breathing room */
     overflow-x: auto;
-    /* Horizontal scroll on mobile if needed */
     scrollbar-width: none;
-    /* Hide scrollbar */
 }
 
 .nav-item {
-    padding: 8px 10px;
+    padding: 6px 16px;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
+    /* Bolder text */
+    color: #fff;
     white-space: nowrap;
     border: 1px solid transparent;
-    border-radius: 2px;
+    border-radius: 20px;
+    /* Pill shape */
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Subtle backing to define the area */
 }
 
 .nav-item:hover {
-    border-color: rgba(255, 255, 255, 0.8);
+    background-color: #fff;
+    /* White background on hover */
+    color: #233e76;
+    /* Dark text on hover */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .nav-hamburger {
-    font-weight: 700;
-    gap: 8px;
-    margin-right: 10px;
+    font-weight: 800;
+    margin-right: 15px;
+    padding-left: 10px;
+    background-color: transparent !important;
+    /* Keep transparent specific for hamburger unless hovered? Or Keep it consistent */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /* Outline for hamburger */
+}
+
+.nav-hamburger:hover {
+    background-color: #fff !important;
+    color: #233e76 !important;
+    border-color: #fff;
 }
 
 /* Search Suggestions Override */
